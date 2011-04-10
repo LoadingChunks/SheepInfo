@@ -75,18 +75,17 @@ public class SIJSON {
 
     	for ( ItemStack i : p.getInventory().getContents() )
    		{
-    		System.out.println("[SHEEPINFO] Step 2...");
     		if(i.getTypeId() > 0)
     		{
     			item.clear();
     			item.put("id", i.getTypeId());
     			item.put("amount", i.getAmount());
     			item.put("durability", i.getDurability());
-    			System.out.println("[SHEEPINFO] Step 3...");
+    			System.out.println("[SHEEPINFO] Step 2...");
     			inventory.add(item);
     		}
     	}
-    	System.out.println("[SHEEPINFO] Step 4...");
+    	System.out.println("[SHEEPINFO] Step 3...");
     	return inventory;
     }
 }
