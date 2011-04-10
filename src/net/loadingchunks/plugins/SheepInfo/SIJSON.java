@@ -77,22 +77,25 @@ public class SIJSON {
 
     	System.out.println("Found Item Count of: " + list.length);
     	
-    	for ( ItemStack i : list )
+    	for(int j = 0; j < list.length; j++)
    		{
-    		item = new JSONObject();
-    		if(i.getTypeId() > 0)
+    		if(list[j] != null)
     		{
-    			System.out.println("[SHEEPINFO] Herp 1");
-    			item.put("id", (int)i.getTypeId());
-    			System.out.println("[SHEEPINFO] Herp 2");
-    			item.put("amount", (int)i.getAmount());
-    			System.out.println("[SHEEPINFO] Herp 3");
-    			item.put("durability", (int)i.getDurability());
-    			System.out.println("[SHEEPINFO] Herp 4");
-    			inventory.add(item);
-    			System.out.println("[SHEEPINFO] Herp 5");
+    			item = new JSONObject();
+    			if(list[j].getTypeId() > 0)
+    			{
+    				System.out.println("[SHEEPINFO] Herp 1");
+    				item.put("id", (int)list[j].getTypeId());
+    				System.out.println("[SHEEPINFO] Herp 2");
+    				item.put("amount", (int)list[j].getAmount());
+    				System.out.println("[SHEEPINFO] Herp 3");
+    				item.put("durability", (int)list[j].getDurability());
+    				System.out.println("[SHEEPINFO] Herp 4");
+    				inventory.add(item);
+    				System.out.println("[SHEEPINFO] Herp 5");
+    			}
+    			System.out.println("[SHEEPINFO] Herp 6 Repeat");
     		}
-    		System.out.println("[SHEEPINFO] Herp 6 Repeat");
     	}
     	System.out.println("[SHEEPINFO] Herp 7");
     	return inventory;
