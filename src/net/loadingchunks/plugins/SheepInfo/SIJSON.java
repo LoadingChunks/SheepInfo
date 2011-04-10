@@ -77,6 +77,8 @@ public class SIJSON {
 
     	System.out.println("Found Item Count of: " + list.length);
     	
+    	System.out.println("List: " + list.toString());
+    	
     	for ( ItemStack i : list )
    		{
     		System.out.println(i.toString());
