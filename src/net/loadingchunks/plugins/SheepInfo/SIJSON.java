@@ -37,9 +37,9 @@ public class SIJSON {
     	return object;
     }
     
-    public JSONObject Players(World w)
+    public JSONArray Players(World w)
     {
-    	JSONObject object = new JSONObject();
+    	JSONArray object = new JSONArray();
     	JSONObject player = new JSONObject();
     	
     	for ( Player p : w.getPlayers())
@@ -56,7 +56,7 @@ public class SIJSON {
     		player.put("air", p.getRemainingAir());
     		player.put("dead", p.isDead());
     		
-    		object.put(p.getName(), player);
+    		object.add(player);
     	}
     	return object;
     }
