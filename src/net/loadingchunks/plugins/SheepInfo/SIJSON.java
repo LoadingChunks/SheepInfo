@@ -87,6 +87,8 @@ public class SIJSON {
     			inventory.add(item);
     			System.out.println("[SHEEPINFO] Herp 5");
     			item.clear();
+    		} else {
+    			break;
     		}
     		System.out.println("[SHEEPINFO] Herp 6 Repeat");
     	}
