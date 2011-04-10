@@ -41,11 +41,11 @@ public class SIJSON {
     public JSONArray Players(World w, Boolean inventory)
     {
     	JSONArray object = new JSONArray();
-    	JSONObject player = new JSONObject();
+    	JSONObject player;
     	
     	for ( Player p : w.getPlayers())
     	{
-    		player.clear();
+    		player = new JSONObject();
     		player.put("name", p.getName());
     		player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
     		player.put("ip", p.getAddress().getHostName());
