@@ -49,13 +49,13 @@ public class SIJSON {
     		player.put("name", p.getName());
     		player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
     		player.put("ip", p.getAddress().getHostName());
-    		player.put("x", p.getLocation().getX());
-    		player.put("y", p.getLocation().getY());
-    		player.put("z", p.getLocation().getZ());
-    		player.put("holding", p.getItemInHand().getTypeId());
-    		player.put("health", p.getHealth());
-    		player.put("air", p.getRemainingAir());
-    		player.put("dead", p.isDead());
+    		player.put("x", (double)p.getLocation().getX());
+    		player.put("y", (double)p.getLocation().getY());
+    		player.put("z", (double)p.getLocation().getZ());
+    		player.put("holding", (int)p.getItemInHand().getTypeId());
+    		player.put("health", (int)p.getHealth());
+    		player.put("air", (int)p.getRemainingAir());
+    		player.put("dead", (boolean)p.isDead());
     		
     		if(inventory)
     		{
@@ -78,9 +78,9 @@ public class SIJSON {
     		if(i.getTypeId() > 0)
     		{
     			item.clear();
-    			item.put("id", i.getTypeId());
-    			item.put("amount", i.getAmount());
-    			item.put("durability", i.getDurability());
+    			item.put("id", (int)i.getTypeId());
+    			item.put("amount", (int)i.getAmount());
+    			item.put("durability", (int)i.getDurability());
     			System.out.println("[SHEEPINFO] Step 2...");
     			inventory.add(item);
     		}
