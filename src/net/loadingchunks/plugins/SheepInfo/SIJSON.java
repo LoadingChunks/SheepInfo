@@ -78,8 +78,10 @@ public class SIJSON {
     			item.put("amount", i.getAmount());
     			item.put("durability", i.getDurability());
     			inventory.add(item);
+    			System.out.println("[SHEEPINFO] Added: " + item.toJSONString());
     		}
     		object.put(p.getName(), inventory);
+    		System.out.println("[SHEEPINFO] Added: " + inventory.toJSONString());
     	}
     	return object;
     }
