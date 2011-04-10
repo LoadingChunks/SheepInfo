@@ -38,7 +38,7 @@ public class SIJSON {
     	return object;
     }
     
-    public JSONArray Players(World w)
+    public JSONArray Players(World w, Boolean inventory)
     {
     	JSONArray object = new JSONArray();
     	JSONObject player = new JSONObject();
@@ -57,33 +57,29 @@ public class SIJSON {
     		player.put("air", p.getRemainingAir());
     		player.put("dead", p.isDead());
     		
+    		if(inventory)
+    		{
+    			player.put("inventory", this.Inventories(p));
+    		}
+    		
     		object.add(player);
     	}
     	return object;
     }
     
-    public JSONObject Inventories(World w)
+    public JSONArray Inventories(Player p)
     {
-    	JSONObject object = new JSONObject();
     	JSONArray inventory = new JSONArray();
     	JSONObject item = new JSONObject();
-    	
-    	for ( Player p : w.getPlayers() )
-    	{
-    		inventory.clear();
-    		for ( ItemStack i : p.getInventory().getContents())
-    		{
-    			item.clear();
-    			item.put("id", i.getTypeId());
-    			item.put("amount", i.getAmount());
-    			item.put("durability", i.getDurability());
-    			inventory.add(item);
-    			System.out.println("[SHEEPINFO] Added Item: " + item.toJSONString());
-    		}
-    		System.out.println("[SHEEPINFO] Adding inventory to Object...");
-    		object.put(p.getName(), inventory);
-    		System.out.println("[SHEEPINFO] Added Inventory: " + inventory.toJSONString());
+
+    	for ( ItemStack i : p.getInventory().getContents() )
+   		{
+   			item.clear();
+   			item.put("id", i.getTypeId());
+   			item.put("amount", i.getAmount());
+    		item.put("durability", i.getDurability());
+    		inventory.add(item);
     	}
-    	return object;
+    	return inventory;
     }
 }
