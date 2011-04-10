@@ -77,15 +77,13 @@ public class SIJSON {
    		{
     		if(i.getTypeId() > 0)
     		{
-    			item.clear();
     			item.put("id", (int)i.getTypeId());
     			item.put("amount", (int)i.getAmount());
     			item.put("durability", (int)i.getDurability());
-    			System.out.println("[SHEEPINFO] Step 2...");
     			inventory.add(item);
+    			item.clear();
     		}
     	}
-    	System.out.println("[SHEEPINFO] Step 3...");
     	return inventory;
     }
 }
