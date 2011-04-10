@@ -59,6 +59,7 @@ public class SIJSON {
     		
     		if(inventory)
     		{
+    			System.out.println("[SHEEPINFO] Step 1...");
     			player.put("inventory", this.Inventories(p));
     		}
     		
@@ -78,8 +79,10 @@ public class SIJSON {
    			item.put("id", i.getTypeId());
    			item.put("amount", i.getAmount());
     		item.put("durability", i.getDurability());
+    		System.out.println("[SHEEPINFO] Step 2...");
     		inventory.add(item);
     	}
+    	System.out.println("[SHEEPINFO] Step 3...");
     	return inventory;
     }
 }

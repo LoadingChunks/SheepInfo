@@ -90,12 +90,13 @@ public class SIHTTPD {
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
-    		JSONObject worlds_object = new JSONObject();
     		
     		for ( World w : this.httpd.plugin.worlds )
     		{
     			response_object.put(w.getName(), this.httpd.infoget.Players(w, true));
     		}
+    		
+    		System.out.println("[SHEEPINFO] Showing Inventory List...");
     		
     		String response = response_object.toJSONString();
 
