@@ -73,23 +73,9 @@ public class SIJSON {
     	JSONArray inventory = new JSONArray();
     	JSONObject item;
     	
-    	ItemStack air = null;
-    	air.setTypeId(0);
-    	air.setAmount(0);
-    	
     	ItemStack[] list = p.getInventory().getContents();
 
     	System.out.println("Found Item Count of: " + list.length);
-    	
-    	System.out.println("List: " + list.toString());
-    	
-    	for ( Object o : list )
-    	{
-    		if(o == null)
-    		{
-    			o = air;
-    		}
-    	}
     	
     	for ( ItemStack i : list )
    		{
