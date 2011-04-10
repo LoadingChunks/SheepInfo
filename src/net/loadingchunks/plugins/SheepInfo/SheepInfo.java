@@ -47,6 +47,8 @@ public class SheepInfo extends JavaPlugin {
         siConfig.put("bind_addr", _config.getString("sheep.bind.address"));
         siConfig.put("bind_port", _config.getString("sheep.bind.port"));
         
+        siConfig.put("keys_ip", _config.getString("sheep.keys.ip"));
+        
         System.out.println("SheepInfo Config saved to memory.");
         
         worlds = this.getServer().getWorlds();
