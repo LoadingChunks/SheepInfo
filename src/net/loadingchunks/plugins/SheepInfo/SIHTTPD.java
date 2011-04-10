@@ -58,11 +58,11 @@ public class SIHTTPD {
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
-    		JSONObject worlds_object = new JSONObject();
+    		JSONObject worlds_object;
     		
     		for( World w : this.httpd.plugin.worlds)
     		{
-    			worlds_object.clear();
+    			worlds_object = new JSONObject();
     			worlds_object.put("core", this.httpd.infoget.Info(w));
     			worlds_object.put("players", this.httpd.infoget.Players(w, false));
     			response_object.put(w.getName(), worlds_object);
