@@ -36,6 +36,7 @@ public class SIHTTPD {
 			return false;
 		}
     	this.server.createContext("/info", new SInfoHandler(this));
+    	this.server.createContext("/inventory", new SInventoryHandler(this));
     	this.server.createContext("/", new SIDefaultHandler());
     	this.server.setExecutor(null);
     	this.server.start();
@@ -68,7 +69,38 @@ public class SIHTTPD {
     		}
     		
     		String response = response_object.toJSONString();
+    		
+    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
+    		h.add("Content-Type", "application/json");
 
+    		t.sendResponseHeaders(200, response.length());
+    		OutputStream os = t.getResponseBody();
+    		os.write(response.getBytes());
+    		os.close();
+    	}
+    }
+    
+    static class SInventoryHandler implements HttpHandler {
+    	private final SIHTTPD httpd;
+    	
+    	public SInventoryHandler(SIHTTPD instance)
+    	{
+    		this.httpd = instance;
+    	}
+    	
+    	public void handle(HttpExchange t) throws IOException {
+    		JSONObject response_object = new JSONObject();
+    		JSONObject worlds_object = new JSONObject();
+    		
+    		for ( World w : this.httpd.plugin.worlds )
+    		{
+    			response_object = this.httpd.infoget.Inventories(w);
+    		}
+    		
+    		String response = response_object.toJSONString();
+
+    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
+    		h.add("Content-Type", "application/json");
     		
     		t.sendResponseHeaders(200, response.length());
     		OutputStream os = t.getResponseBody();
@@ -80,8 +112,6 @@ public class SIHTTPD {
     static class SIDefaultHandler implements HttpHandler {
     	public void handle(HttpExchange t) throws IOException {
     		String response = "Try /info to get MC Server Info.";
-    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
-    		h.add("Content-Type", "application/json");
     		t.sendResponseHeaders(200, response.length());
     		OutputStream os = t.getResponseBody();
     		os.write(response.getBytes());

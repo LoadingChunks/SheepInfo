@@ -8,6 +8,7 @@ import java.util.concurrent.Executor;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.*;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -57,6 +58,28 @@ public class SIJSON {
     		player.put("dead", p.isDead());
     		
     		object.add(player);
+    	}
+    	return object;
+    }
+    
+    public JSONObject Inventories(World w)
+    {
+    	JSONObject object = new JSONObject();
+    	JSONArray inventory = new JSONArray();
+    	JSONObject item = new JSONObject();
+    	
+    	for ( Player p : w.getPlayers() )
+    	{
+    		inventory.clear();
+    		for ( ItemStack i : p.getInventory().getContents())
+    		{
+    			item.clear();
+    			item.put("id", i.getTypeId());
+    			item.put("amount", i.getAmount());
+    			item.put("durability", i.getDurability());
+    			inventory.add(item);
+    		}
+    		object.put(p.getName(), inventory);
     	}
     	return object;
     }
