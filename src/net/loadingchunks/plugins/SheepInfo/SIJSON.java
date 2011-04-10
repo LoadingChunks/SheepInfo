@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.json.simple.*;
@@ -45,7 +46,7 @@ public class SIJSON {
     	{
     		player.clear();
     		player.put("name", p.getName());
-    		player.put("nickname", p.getDisplayName());
+    		player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
     		player.put("ip", p.getAddress().getHostName());
     		player.put("x", p.getLocation().getX());
     		player.put("y", p.getLocation().getY());
