@@ -77,8 +77,9 @@ public class SIJSON {
 
     	System.out.println("Found Item Count of: " + list.length);
     	
-    	for ( ItemStack i : p.getInventory().getContents() )
+    	for ( ItemStack i : list )
    		{
+    		System.out.println(i.toString());
     		item = new JSONObject();
     		if(i.getTypeId() > 0)
     		{
