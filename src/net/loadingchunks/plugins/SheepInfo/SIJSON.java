@@ -71,26 +71,22 @@ public class SIJSON {
     public JSONArray Inventories(Player p)
     {
     	JSONArray inventory = new JSONArray();
-    	JSONObject item = new JSONObject();
-    	
-    	ItemStack[] i = p.getInventory().getContents();
+    	JSONObject item;
 
-    	for ( int j = 0; j < i.length; j++ )
+    	for ( ItemStack i : p.getInventory().getContents() )
    		{
-    		if(i[j].getTypeId() > 0)
+    		item = new JSONObject();
+    		if(i.getTypeId() > 0)
     		{
-    			item.clear();
     			System.out.println("[SHEEPINFO] Herp 1");
-    			item.put("id", (int)i[j].getTypeId());
+    			item.put("id", (int)i.getTypeId());
     			System.out.println("[SHEEPINFO] Herp 2");
-    			item.put("amount", (int)i[j].getAmount());
+    			item.put("amount", (int)i.getAmount());
     			System.out.println("[SHEEPINFO] Herp 3");
-    			item.put("durability", (int)i[j].getDurability());
+    			item.put("durability", (int)i.getDurability());
     			System.out.println("[SHEEPINFO] Herp 4");
     			inventory.add(item);
     			System.out.println("[SHEEPINFO] Herp 5");
-    		} else {
-    			break;
     		}
     		System.out.println("[SHEEPINFO] Herp 6 Repeat");
     	}
