@@ -94,7 +94,7 @@ public class SIHTTPD {
     		
     		for ( World w : this.httpd.plugin.worlds )
     		{
-    			response_object = this.httpd.infoget.Inventories(w);
+    			response_object.put(w.getName(), this.httpd.infoget.Inventories(w));
     		}
     		
     		String response = response_object.toJSONString();
