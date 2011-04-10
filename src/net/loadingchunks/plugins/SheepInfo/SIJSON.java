@@ -60,6 +60,7 @@ public class SIJSON {
     		if(inventory)
     		{
     			player.put("inventory", this.Inventories(p));
+    			System.out.println("[SHEEPINFO] Herp Last");
     		}
     		
     		object.add(player);
@@ -72,21 +73,28 @@ public class SIJSON {
     	JSONArray inventory = new JSONArray();
     	JSONObject item = new JSONObject();
     	
+    	ItemStack[] i = p.getInventory().getContents();
 
-    	for ( int j = 0; j < p.getInventory().getContents().length; j++ )
+    	for ( int j = 0; j < i.length; j++ )
    		{
-        	ItemStack i = p.getInventory().getContents()[j];
-    		if(i.getTypeId() > 0)
+    		if(i[j].getTypeId() > 0)
     		{
     			item.clear();
-    			item.put("id", (int)i.getTypeId());
-    			item.put("amount", (int)i.getAmount());
-    			item.put("durability", (int)i.getDurability());
+    			System.out.println("[SHEEPINFO] Herp 1");
+    			item.put("id", (int)i[j].getTypeId());
+    			System.out.println("[SHEEPINFO] Herp 2");
+    			item.put("amount", (int)i[j].getAmount());
+    			System.out.println("[SHEEPINFO] Herp 3");
+    			item.put("durability", (int)i[j].getDurability());
+    			System.out.println("[SHEEPINFO] Herp 4");
     			inventory.add(item);
+    			System.out.println("[SHEEPINFO] Herp 5");
     		} else {
     			break;
     		}
+    		System.out.println("[SHEEPINFO] Herp 6 Repeat");
     	}
+    	System.out.println("[SHEEPINFO] Herp 7");
     	return inventory;
     }
 }
