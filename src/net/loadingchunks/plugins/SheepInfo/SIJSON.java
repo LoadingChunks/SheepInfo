@@ -48,7 +48,8 @@ public class SIJSON {
     		player = new JSONObject();
     		player.put("name", p.getName());
     		player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
-    		player.put("ip", p.getAddress().getHostName());
+    		if(this.plugin.siConfig.get("keys_ip").equalsIgnoreCase("yes"))
+    			player.put("ip", p.getAddress().getHostName());
     		player.put("x", (double)p.getLocation().getX());
     		player.put("y", (double)p.getLocation().getY());
     		player.put("z", (double)p.getLocation().getZ());
