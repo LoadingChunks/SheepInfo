@@ -59,8 +59,8 @@ public class SIJSON {
     		
     		if(inventory)
     		{
-    			System.out.println("[SHEEPINFO] Step 1...");
     			player.put("inventory", this.Inventories(p));
+    			System.out.println("[SHEEPINFO] Herp Last");
     		}
     		
     		object.add(player);
@@ -77,13 +77,20 @@ public class SIJSON {
    		{
     		if(i.getTypeId() > 0)
     		{
+    			System.out.println("[SHEEPINFO] Herp 1");
     			item.put("id", (int)i.getTypeId());
+    			System.out.println("[SHEEPINFO] Herp 2");
     			item.put("amount", (int)i.getAmount());
+    			System.out.println("[SHEEPINFO] Herp 3");
     			item.put("durability", (int)i.getDurability());
+    			System.out.println("[SHEEPINFO] Herp 4");
     			inventory.add(item);
+    			System.out.println("[SHEEPINFO] Herp 5");
     			item.clear();
     		}
+    		System.out.println("[SHEEPINFO] Herp 6 Repeat");
     	}
+    	System.out.println("[SHEEPINFO] Herp 7");
     	return inventory;
     }
 }
