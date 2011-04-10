@@ -42,7 +42,7 @@ public class SheepInfo extends JavaPlugin {
         
         _config.load();
         
-        System.out.println("Loaded GuardWolf Config Successfully!");
+        System.out.println("Loaded SheepInfo Config Successfully!");
         
         siConfig.put("bind_addr", _config.getString("sheep.bind.address"));
         siConfig.put("bind_port", _config.getString("sheep.bind.port"));
