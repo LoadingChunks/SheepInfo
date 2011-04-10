@@ -37,6 +37,7 @@ public class SIHTTPD {
 		}
     	this.server.createContext("/info", new SInfoHandler(this));
     	this.server.createContext("/inventory", new SInventoryHandler(this));
+    	this.server.createContext("/entities", new SIEntityHandler(this));
     	this.server.createContext("/", new SIDefaultHandler());
     	this.server.setExecutor(null);
     	this.server.start();
@@ -80,6 +81,34 @@ public class SIHTTPD {
     	}
     }
     
+    static class SIEntityHandler implements HttpHandler {
+    	private final SIHTTPD httpd;
+    	
+    	public SIEntityHandler(SIHTTPD instance)
+    	{
+    		this.httpd = instance;
+    	}
+    	
+    	public void handle(HttpExchange t) throws IOException {
+    		JSONObject response_object = new JSONObject();
+    		
+    		for ( World w : this.httpd.plugin.worlds )
+    		{
+    			response_object.put(w.getName(), this.httpd.infoget.Entities(w));
+    		}
+    		
+    		String response = response_object.toJSONString();
+
+    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
+    		h.add("Content-Type", "application/json");
+    		
+    		t.sendResponseHeaders(200, response.length());
+    		OutputStream os = t.getResponseBody();
+    		os.write(response.getBytes());
+    		os.close();
+    	}
+    }
+    
     static class SInventoryHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
@@ -95,8 +124,6 @@ public class SIHTTPD {
     		{
     			response_object.put(w.getName(), this.httpd.infoget.Players(w, true));
     		}
-    		
-    		System.out.println("[SHEEPINFO] Showing Inventory List...");
     		
     		String response = response_object.toJSONString();
 

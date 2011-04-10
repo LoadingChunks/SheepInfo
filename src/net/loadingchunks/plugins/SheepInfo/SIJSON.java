@@ -7,7 +7,24 @@ import java.util.concurrent.Executor;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.FallingSand;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowball;
+import org.bukkit.entity.Squid;
+import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.*;
 
@@ -91,5 +108,57 @@ public class SIJSON {
     		}
     	}
     	return inventory;
+    }
+    
+    public JSONObject Entities(World w)
+    {
+    	JSONObject object = new JSONObject();
+    	int creepers = 0,minecarts = 0,boats = 0,zombies = 0,pickups = 0,slimes = 0,arrows = 0,projectiles = 0,active_tnt = 0,falling = 0,squids = 0,wolves = 0,ghasts = 0;
+   	
+    	for(Entity e : w.getEntities())
+    	{
+    		if(e instanceof Creeper)
+    			creepers++;
+    		else if(e instanceof Minecart || e instanceof PoweredMinecart || e instanceof StorageMinecart)
+    			minecarts++;
+    		else if(e instanceof Boat)
+    			boats++;
+    		else if(e instanceof Zombie)
+    			zombies++;
+    		else if(e instanceof Item)
+    			pickups++;
+    		else if(e instanceof Slime)
+    			slimes++;
+    		else if(e instanceof Arrow)
+    			arrows++;
+    		else if(e instanceof Snowball || e instanceof Egg)
+    			projectiles++;
+    		else if(e instanceof TNTPrimed)
+    			active_tnt++;
+    		else if(e instanceof FallingSand || e instanceof FallingSand)
+    			falling++;
+    		else if(e instanceof Squid)
+    			squids++;
+    		else if(e instanceof Wolf)
+    			wolves++;
+    		else if(e instanceof Ghast)
+    			ghasts++;
+    		
+    	}
+    	
+    	object.put("creepers", creepers);
+    	object.put("minecarts", minecarts);
+    	object.put("boats", boats);
+    	object.put("zombies", zombies);
+    	object.put("pickups", pickups);
+    	object.put("slimes", slimes);
+    	object.put("arrows", arrows);
+    	object.put("projectiles", projectiles);
+    	object.put("active_tnt", active_tnt);
+    	object.put("falling", falling);
+    	object.put("squid", squids);
+    	object.put("wolves", wolves);
+    	object.put("ghasts", ghasts);
+    	return object;
     }
 }
