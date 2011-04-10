@@ -11,6 +11,7 @@ import org.json.simple.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import com.sun.xml.internal.ws.transport.Headers;
 
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
@@ -68,6 +69,7 @@ public class SIHTTPD {
     		
     		String response = response_object.toJSONString();
 
+    		
     		t.sendResponseHeaders(200, response.length());
     		OutputStream os = t.getResponseBody();
     		os.write(response.getBytes());
@@ -78,6 +80,8 @@ public class SIHTTPD {
     static class SIDefaultHandler implements HttpHandler {
     	public void handle(HttpExchange t) throws IOException {
     		String response = "Try /info to get MC Server Info.";
+    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
+    		h.add("Content-Type", "application/json");
     		t.sendResponseHeaders(200, response.length());
     		OutputStream os = t.getResponseBody();
     		os.write(response.getBytes());

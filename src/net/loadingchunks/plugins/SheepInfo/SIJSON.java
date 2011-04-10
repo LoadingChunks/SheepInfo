@@ -30,8 +30,9 @@ public class SIJSON {
     	object.put("players", new Integer(w.getPlayers().size()));
     	object.put("chunks", new Integer(w.getLoadedChunks().length));
     	object.put("entities", new Integer(w.getLivingEntities().size()));
-    	object.put("max_mem", new Integer((int) Runtime.getRuntime().maxMemory()));
-    	object.put("free_mem", new Integer((int) Runtime.getRuntime().freeMemory()));
+    	object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
+    	object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
+    	object.put("time", new Long(w.getTime()));
     	return object;
     }
     
