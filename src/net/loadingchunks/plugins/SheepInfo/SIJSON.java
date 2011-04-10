@@ -72,7 +72,11 @@ public class SIJSON {
     {
     	JSONArray inventory = new JSONArray();
     	JSONObject item;
+    	
+    	ItemStack[] list = p.getInventory().getContents();
 
+    	System.out.println("Found Item Count of: " + list.length);
+    	
     	for ( ItemStack i : p.getInventory().getContents() )
    		{
     		item = new JSONObject();
