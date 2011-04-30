@@ -46,6 +46,18 @@ public class SheepInfo extends JavaPlugin {
         
         _config.load();
         
+        Plugin p = this.getServer().getPluginManager().getPlugin("iConomy");
+        if(p != null)
+        {
+        	System.out.println("[SHEEPINFO] iConomy detected, initialising link...");
+        	if (!this.getServer().getPluginManager().isPluginEnabled(p))
+        		this.getServer().getPluginManager().enablePlugin(p);
+        	iConomy = (iConomy) p;
+        } else {
+        	System.out.println("[SHEEPINFO] iConomy not found! :(");
+        	this.disableMoney = true;
+        }
+        
         System.out.println("Loaded SheepInfo Config Successfully!");
         
         siConfig.put("bind_addr", _config.getString("sheep.bind.address"));
@@ -67,17 +79,5 @@ public class SheepInfo extends JavaPlugin {
         	System.out.println("[SHEEPINFO] Error starting SheepInfo HTTPD!");
         else
         	System.out.println("[SHEEPINFO] SheepInfo HTTPD successfully listening!");
-        
-        Plugin p = this.getServer().getPluginManager().getPlugin("iConomy");
-        if(p != null)
-        {
-        	System.out.println("[SHEEPINFO] iConomy detected, initialising link...");
-        	if (!this.getServer().getPluginManager().isPluginEnabled(p))
-        		this.getServer().getPluginManager().enablePlugin(p);
-        	iConomy = (iConomy) p;
-        } else {
-        	System.out.println("[SHEEPINFO] iConomy not found! :(");
-        	this.disableMoney = true;
-        }
     }
 }
