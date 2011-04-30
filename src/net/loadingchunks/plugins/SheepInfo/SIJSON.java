@@ -75,15 +75,10 @@ public class SIJSON {
     		player.put("health", (int)p.getHealth());
     		player.put("air", (int)p.getRemainingAir());
     		player.put("dead", (boolean)p.isDead());
-    		System.out.println("Check iConomy...");
     		try {
     			if(!plugin.disableMoney)
     			{
-    				System.out.println("iConomy is enabled, let's do this.");
-    				System.out.println("Moneez: " + plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     				player.put("money", plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
-    			} else {
-    				System.out.println("Hmm.");
     			}
     		} catch (Exception e) {
     			e.printStackTrace();
