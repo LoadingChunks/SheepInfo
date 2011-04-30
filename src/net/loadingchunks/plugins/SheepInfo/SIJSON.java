@@ -56,7 +56,7 @@ public class SIJSON {
     	return object;
     }
     
-    public JSONArray Players(World w, Boolean inventory)
+    public JSONArray Players(World w, Boolean inventory, SheepInfo plugin)
     {
     	JSONArray object = new JSONArray();
     	JSONObject player;
@@ -77,11 +77,11 @@ public class SIJSON {
     		player.put("dead", (boolean)p.isDead());
     		System.out.println("Check iConomy...");
     		try {
-    			if(!this.plugin.disableMoney)
+    			if(!plugin.disableMoney)
     			{
     				System.out.println("iConomy is enabled, let's do this.");
-    				System.out.println("Moneez: " + this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
-    				player.put("money", this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
+    				System.out.println("Moneez: " + plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
+    				player.put("money", plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     			} else {
     				System.out.println("Hmm.");
     			}

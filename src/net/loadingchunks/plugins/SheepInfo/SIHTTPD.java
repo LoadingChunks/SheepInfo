@@ -66,7 +66,7 @@ public class SIHTTPD {
     		{
     			worlds_object = new JSONObject();
     			worlds_object.put("core", this.httpd.infoget.Info(w));
-    			worlds_object.put("players", this.httpd.infoget.Players(w, false));
+    			worlds_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
     			response_object.put(w.getName(), worlds_object);
     		}
     		
@@ -123,7 +123,7 @@ public class SIHTTPD {
     		
     		for ( World w : this.httpd.plugin.worlds )
     		{
-    			response_object.put(w.getName(), this.httpd.infoget.Players(w, true));
+    			response_object.put(w.getName(), this.httpd.infoget.Players(w, true, this.httpd.plugin));
     		}
     		
     		String response = response_object.toJSONString();
