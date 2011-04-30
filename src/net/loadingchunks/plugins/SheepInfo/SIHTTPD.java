@@ -17,11 +17,12 @@ import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
 public class SIHTTPD {
     private final SheepInfo plugin;
-    private final SIJSON infoget = new SIJSON(this.plugin);
+    private final SIJSON infoget;
     private HttpServer server;
 
-    public SIHTTPD (SheepInfo plugin) {
-        this.plugin = plugin;
+    public SIHTTPD (SheepInfo instance) {
+        this.plugin = instance;
+        infoget = new SIJSON(instance);
     }
     
     public boolean Listen()

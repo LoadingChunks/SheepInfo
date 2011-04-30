@@ -39,8 +39,8 @@ import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 public class SIJSON {
     private final SheepInfo plugin;
 
-    public SIJSON (SheepInfo plugin) {
-        this.plugin = plugin;
+    public SIJSON (SheepInfo instance) {
+        this.plugin = instance;
     }
     
     public JSONObject Info(World w)
