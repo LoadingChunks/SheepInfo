@@ -26,6 +26,7 @@ public class SheepInfo extends JavaPlugin {
 	public final SIHTTPD httpd = new SIHTTPD(this);
 	public List<World> worlds;
 	public iConomy iConomy = null;
+	public boolean disableMoney = false;
 
     public void onDisable() {
         System.out.println("[SHEEPINFO] Stopping...");
@@ -76,6 +77,7 @@ public class SheepInfo extends JavaPlugin {
         	iConomy = (iConomy) p;
         } else {
         	System.out.println("[SHEEPINFO] iConomy not found! :(");
+        	this.disableMoney = true;
         }
     }
 }
