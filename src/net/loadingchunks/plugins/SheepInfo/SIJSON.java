@@ -78,6 +78,7 @@ public class SIJSON {
     		System.out.println("Check iConomy...");
     		if(!this.plugin.disableMoney)
     		{
+    			System.out.println("iConomy is enabled, let's do this.");
     			System.out.println("Moneez: " + this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     			player.put("money", this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     		} else {
