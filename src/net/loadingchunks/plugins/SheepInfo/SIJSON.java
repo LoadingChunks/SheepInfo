@@ -76,7 +76,10 @@ public class SIJSON {
     		player.put("air", (int)p.getRemainingAir());
     		player.put("dead", (boolean)p.isDead());
     		if(this.plugin.iConomy != null)
+    		{
+    			System.out.print("Moneez: " + this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     			player.put("money", this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
+    		}
     		
     		if(inventory)
     		{
