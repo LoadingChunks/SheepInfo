@@ -81,6 +81,7 @@ public class SIJSON {
     		player.put("y", (double)p.getLocation().getY());
     		player.put("z", (double)p.getLocation().getZ());
     		player.put("holding", (int)p.getItemInHand().getTypeId());
+    		player.put("holding_dmg", (int)p.getItemInHand().getDurability());
     		player.put("health", (int)p.getHealth());
     		player.put("air", (int)p.getRemainingAir());
     		player.put("dead", (boolean)p.isDead());
