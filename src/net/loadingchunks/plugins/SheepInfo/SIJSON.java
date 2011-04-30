@@ -3,6 +3,7 @@ package net.loadingchunks.plugins.SheepInfo;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.concurrent.Executor;
 
 import org.bukkit.ChatColor;
@@ -43,7 +44,7 @@ public class SIJSON {
         this.plugin = instance;
     }
     
-    public JSONObject Info(World w)
+    public JSONObject Info(World w, SheepInfo plugin)
     {
     	JSONObject object = new JSONObject();
     	object.put("name", w.getName());
@@ -53,6 +54,14 @@ public class SIJSON {
     	object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
     	object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
     	object.put("time", new Long(w.getTime()));
+    	if(!plugin.disableMoney)
+    	{
+    		object.put("currency", plugin.iConomy.getBank().getCurrency());
+    		double totalCurrency = 0;
+    		for (Double value : plugin.iConomy.getBank().getAccounts().values())
+    			totalCurrency += value;
+    		object.put("eco_total", totalCurrency);
+    	}
     	return object;
     }
     

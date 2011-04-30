@@ -65,7 +65,7 @@ public class SIHTTPD {
     		for( World w : this.httpd.plugin.worlds)
     		{
     			worlds_object = new JSONObject();
-    			worlds_object.put("core", this.httpd.infoget.Info(w));
+    			worlds_object.put("core", this.httpd.infoget.Info(w, this.httpd.plugin));
     			worlds_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
     			response_object.put(w.getName(), worlds_object);
     		}
