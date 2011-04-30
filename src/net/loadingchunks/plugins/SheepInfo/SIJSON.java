@@ -76,15 +76,18 @@ public class SIJSON {
     		player.put("air", (int)p.getRemainingAir());
     		player.put("dead", (boolean)p.isDead());
     		System.out.println("Check iConomy...");
-    		if(!this.plugin.disableMoney)
-    		{
-    			System.out.println("iConomy is enabled, let's do this.");
-    			System.out.println("Moneez: " + this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
-    			player.put("money", this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
-    		} else {
-    			System.out.println("Hmm.");
+    		try {
+    			if(!this.plugin.disableMoney)
+    			{
+    				System.out.println("iConomy is enabled, let's do this.");
+    				System.out.println("Moneez: " + this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
+    				player.put("money", this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
+    			} else {
+    				System.out.println("Hmm.");
+    			}
+    		} catch (Exception e) {
+    			e.printStackTrace();
     		}
-    		
     		if(inventory)
     		{
     			player.put("inventory", this.Inventories(p));
