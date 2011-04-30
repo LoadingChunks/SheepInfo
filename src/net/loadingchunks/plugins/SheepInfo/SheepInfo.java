@@ -9,10 +9,12 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
+import com.nijiko.coelho.iConomy.iConomy;
 
 /**
  * GuardWolf Ban System plugin for Bukkit
@@ -23,6 +25,7 @@ public class SheepInfo extends JavaPlugin {
 	public final HashMap<String, String> siConfig = new HashMap<String, String>();
 	public final SIHTTPD httpd = new SIHTTPD(this);
 	public List<World> worlds;
+	public iConomy iConomy = null;
 
     public void onDisable() {
         System.out.println("[SHEEPINFO] Stopping...");
@@ -63,5 +66,16 @@ public class SheepInfo extends JavaPlugin {
         	System.out.println("[SHEEPINFO] Error starting SheepInfo HTTPD!");
         else
         	System.out.println("[SHEEPINFO] SheepInfo HTTPD successfully listening!");
+        
+        Plugin p = this.getServer().getPluginManager().getPlugin("iConomy");
+        if(p != null)
+        {
+        	System.out.println("[SHEEPINFO] iConomy detected, initialising link...");
+        	if (!this.getServer().getPluginManager().isPluginEnabled(p))
+        		this.getServer().getPluginManager().enablePlugin(p);
+        	iConomy = (iConomy) p;
+        } else {
+        	System.out.println("[SHEEPINFO] iConomy not found! :(");
+        }
     }
 }

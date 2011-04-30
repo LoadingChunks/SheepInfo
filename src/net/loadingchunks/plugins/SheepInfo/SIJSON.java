@@ -27,6 +27,7 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.*;
+import com.nijiko.coelho.iConomy.iConomy;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -74,6 +75,8 @@ public class SIJSON {
     		player.put("health", (int)p.getHealth());
     		player.put("air", (int)p.getRemainingAir());
     		player.put("dead", (boolean)p.isDead());
+    		if(this.plugin.iConomy != null)
+    			player.put("money", this.plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     		
     		if(inventory)
     		{
@@ -161,4 +164,5 @@ public class SIJSON {
     	object.put("ghasts", ghasts);
     	return object;
     }
+    
 }
