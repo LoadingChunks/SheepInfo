@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
+import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -69,6 +70,7 @@ public class SIJSON {
     {
     	JSONArray object = new JSONArray();
     	JSONObject player;
+		String pg; // Player group
     	
     	for ( Player p : w.getPlayers())
     	{
@@ -93,6 +95,18 @@ public class SIJSON {
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
+    		try {
+    			if(!plugin.disableGroups)
+    			{
+    				pg = plugin.gm.getWorldsHolder().getWorldPermissions(p).getGroup(p.getName());
+    				player.put("gm_group", pg);
+    				player.put("gm_prefix", plugin.gm.getWorldsHolder().getWorldPermissions(p).getGroupPrefix(pg));
+    				player.put("gm_suffix", plugin.gm.getWorldsHolder().getWorldPermissions(p).getGroupSuffix(pg));
+    			}
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+
     		if(inventory)
     		{
     			player.put("inventory", this.Inventories(p));
