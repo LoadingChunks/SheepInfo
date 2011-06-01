@@ -14,10 +14,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
-import com.nijiko.coelho.iConomy.iConomy;
-import org.anjocaido.groupmanager.GroupManager;
-import org.anjocaido.groupmanager.dataholder.OverloadedWorldHolder;
-import org.anjocaido.groupmanager.dataholder.worlds.WorldsHolder;
+import com.iConomy.*;
 
 /**
  * GuardWolf Ban System plugin for Bukkit
@@ -30,8 +27,7 @@ public class SheepInfo extends JavaPlugin {
 	public List<World> worlds;
 	public iConomy iConomy = null;
 	public boolean disableMoney = false;
-	public GroupManager gm;
-	public WorldsHolder wd;
+	public SIPermissions perm = new SIPermissions(this);
 	public boolean disableGroups = false;
 
     public void onDisable() {
@@ -64,18 +60,7 @@ public class SheepInfo extends JavaPlugin {
         	this.disableMoney = true;
         }
         
-        Plugin p2 = this.getServer().getPluginManager().getPlugin("GroupManager");
-        if(p2 != null)
-        {
-        	System.out.println("[SHEEPINFO] GroupManager detected, initialising link...");
-        	if (!this.getServer().getPluginManager().isPluginEnabled(p2))
-        		this.getServer().getPluginManager().enablePlugin(p2);
-        	gm = (GroupManager) p2;
-        	wd = gm.getWorldsHolder();
-        } else {
-        	System.out.println("[SHEEPINFO] GroupManager not found! :(");
-        	this.disableGroups = true;
-        }
+        this.perm.setupPermissions();
         
         System.out.println("Loaded SheepInfo Config Successfully!");
         

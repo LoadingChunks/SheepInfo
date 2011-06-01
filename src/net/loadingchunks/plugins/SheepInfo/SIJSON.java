@@ -6,7 +6,6 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
-import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -29,7 +28,10 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.*;
-import com.nijiko.coelho.iConomy.iConomy;
+
+import sun.tools.tree.ThisExpression;
+
+import com.iConomy.*;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -55,14 +57,14 @@ public class SIJSON {
     	object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
     	object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
     	object.put("time", new Long(w.getTime()));
-    	if(!plugin.disableMoney)
+    	/*if(!plugin.disableMoney)
     	{
-    		object.put("currency", plugin.iConomy.getBank().getCurrency());
+    		object.put("currency", this.plugin.iConomy);
     		double totalCurrency = 0;
     		for (Double value : plugin.iConomy.getBank().getAccounts().values())
     			totalCurrency += value;
     		object.put("eco_total", totalCurrency);
-    	}
+    	}*/
     	return object;
     }
     
@@ -87,21 +89,20 @@ public class SIJSON {
     		player.put("health", (int)p.getHealth());
     		player.put("air", (int)p.getRemainingAir());
     		player.put("dead", (boolean)p.isDead());
-    		try {
+/*    		try {
     			if(!plugin.disableMoney)
     			{
     				player.put("money", plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
     			}
     		} catch (Exception e) {
     			e.printStackTrace();
-    		}
+    		}*/
     		try {
     			if(!plugin.disableGroups)
     			{
-    				pg = plugin.gm.getWorldsHolder().getWorldPermissions(p).getGroup(p.getName());
-    				player.put("gm_group", pg);
-    				player.put("gm_prefix", plugin.gm.getWorldsHolder().getWorldPermissions(p).getGroupPrefix(pg));
-    				player.put("gm_suffix", plugin.gm.getWorldsHolder().getWorldPermissions(p).getGroupSuffix(pg));
+    				player.put("gm_group", this.plugin.perm.UserGroup(p));
+    				player.put("gm_prefix", this.plugin.perm.UserPrefix(p));
+    				player.put("gm_suffix", this.plugin.perm.UserSuffix(p));
     			}
     		} catch (Exception e) {
     			e.printStackTrace();
