@@ -87,14 +87,14 @@ public class SIJSON {
     			player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
     		//	if(this.plugin.siConfig.get("keys_ip").equalsIgnoreCase("yes"))
     				player.put("ip", p.getAddress().getHostName());
-    				player.put("x", (double)p.getLocation().getX());
-    				player.put("y", (double)p.getLocation().getY());
-    				player.put("z", (double)p.getLocation().getZ());
-    				player.put("holding", (int)p.getItemInHand().getTypeId());
-    				player.put("holding_dmg", (int)p.getItemInHand().getDurability());
-    				player.put("health", (int)p.getHealth());
-    				player.put("air", (int)p.getRemainingAir());
-    				player.put("dead", (boolean)p.isDead());
+    			player.put("x", (double)p.getLocation().getX());
+    			player.put("y", (double)p.getLocation().getY());
+    			player.put("z", (double)p.getLocation().getZ());
+    			player.put("holding", (int)p.getItemInHand().getTypeId());
+    			player.put("holding_dmg", (int)p.getItemInHand().getDurability());
+    			player.put("health", (int)p.getHealth());
+    			player.put("air", (int)p.getRemainingAir());
+    			player.put("dead", (boolean)p.isDead());
     		} catch (Exception e)
     		{
     			e.printStackTrace();
@@ -110,7 +110,7 @@ public class SIJSON {
     		try {
     			if(!plugin.disableGroups)
     			{
-    				player.put("gm_group", this.plugin.perm.UserGroup(p));
+    				//player.put("gm_group", this.plugin.perm.UserGroup(p));
     				player.put("gm_prefix", this.plugin.perm.UserPrefix(p));
     				player.put("gm_suffix", this.plugin.perm.UserSuffix(p));
     			}
