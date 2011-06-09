@@ -107,7 +107,7 @@ public class SIJSON {
     		} catch (Exception e) {
     			e.printStackTrace();
     		}*/
-    		try {
+    		/*try {
     			if(!plugin.disableGroups)
     			{
     				//player.put("gm_group", this.plugin.perm.UserGroup(p));
@@ -116,7 +116,7 @@ public class SIJSON {
     			}
     		} catch (Exception e) {
     			e.printStackTrace();
-    		}
+    		}*/
 
     		if(inventory)
     		{
