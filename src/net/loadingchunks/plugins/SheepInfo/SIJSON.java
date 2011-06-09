@@ -50,13 +50,18 @@ public class SIJSON {
     public JSONObject Info(World w, SheepInfo plugin)
     {
     	JSONObject object = new JSONObject();
-    	object.put("name", w.getName());
-    	object.put("players", new Integer(w.getPlayers().size()));
-    	object.put("chunks", new Integer(w.getLoadedChunks().length));
-    	object.put("entities", new Integer(w.getLivingEntities().size()));
-    	object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
-    	object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
-    	object.put("time", new Long(w.getTime()));
+    	try {
+    		object.put("name", w.getName());
+    		object.put("players", new Integer(w.getPlayers().size()));
+    		object.put("chunks", new Integer(w.getLoadedChunks().length));
+    		object.put("entities", new Integer(w.getLivingEntities().size()));
+    		object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
+    		object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
+    		object.put("time", new Long(w.getTime()));
+    	} catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
     	/*if(!plugin.disableMoney)
     	{
     		object.put("currency", this.plugin.iConomy);
@@ -77,18 +82,23 @@ public class SIJSON {
     	for ( Player p : w.getPlayers())
     	{
     		player = new JSONObject();
-    		player.put("name", p.getName());
-    		player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
-    		//if(this.plugin.siConfig.get("keys_ip").equalsIgnoreCase("yes"))
-    			player.put("ip", p.getAddress().getHostName());
-    		player.put("x", (double)p.getLocation().getX());
-    		player.put("y", (double)p.getLocation().getY());
-    		player.put("z", (double)p.getLocation().getZ());
-    		player.put("holding", (int)p.getItemInHand().getTypeId());
-    		player.put("holding_dmg", (int)p.getItemInHand().getDurability());
-    		player.put("health", (int)p.getHealth());
-    		player.put("air", (int)p.getRemainingAir());
-    		player.put("dead", (boolean)p.isDead());
+    		try {
+    			player.put("name", p.getName());
+    			player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
+    		//	if(this.plugin.siConfig.get("keys_ip").equalsIgnoreCase("yes"))
+    				player.put("ip", p.getAddress().getHostName());
+    				player.put("x", (double)p.getLocation().getX());
+    				player.put("y", (double)p.getLocation().getY());
+    				player.put("z", (double)p.getLocation().getZ());
+    				player.put("holding", (int)p.getItemInHand().getTypeId());
+    				player.put("holding_dmg", (int)p.getItemInHand().getDurability());
+    				player.put("health", (int)p.getHealth());
+    				player.put("air", (int)p.getRemainingAir());
+    				player.put("dead", (boolean)p.isDead());
+    		} catch (Exception e)
+    		{
+    			e.printStackTrace();
+    		}
 /*    		try {
     			if(!plugin.disableMoney)
     			{
