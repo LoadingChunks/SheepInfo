@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.json.simple.*;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -35,6 +36,7 @@ public class SIHTTPD {
     	this.server.createContext("/info", new SInfoHandler(this));
     	this.server.createContext("/inventory", new SInventoryHandler(this));
     	this.server.createContext("/entities", new SIEntityHandler(this));
+    	this.server.createContext("/players", new SIPlayerHandler(this));
     	this.server.createContext("/", new SIDefaultHandler());
     	this.server.setExecutor(null);
     	this.server.start();
@@ -67,6 +69,43 @@ public class SIHTTPD {
     		}
     		
     		String response = response_object.toJSONString();
+    		
+    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
+    		h.add("Content-Type", "application/json");
+
+    		t.sendResponseHeaders(200, response.length());
+    		OutputStream os = t.getResponseBody();
+    		os.write(response.getBytes());
+    		os.close();
+    	}
+    }
+    
+    static class SIPlayerHandler implements HttpHandler {
+    	private final SIHTTPD httpd;
+    	
+    	public SIPlayerHandler(SIHTTPD instance)
+    	{
+    		this.httpd = instance;
+    	}
+    	
+    	public void handle(HttpExchange t) throws IOException {
+    		JSONArray response_array = new JSONArray();
+    		
+    		for( World w : this.httpd.plugin.worlds)
+    		{
+    			for ( Player p : w.getPlayers() )
+    			{
+    				try {
+    					p.getAddress().getHostName();
+    				} catch (NullPointerException n)
+    				{
+    					continue;
+    				}
+    				response_array.add(p.getName());
+    			}
+    		}
+    		
+    		String response = response_array.toJSONString();
     		
     		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
     		h.add("Content-Type", "application/json");
