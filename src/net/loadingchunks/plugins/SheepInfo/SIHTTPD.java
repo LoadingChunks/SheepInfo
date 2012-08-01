@@ -95,12 +95,12 @@ public class SIHTTPD {
     		{
     			for ( Player p : w.getPlayers() )
     			{
-    				try {
+    				/*try {
     					p.getAddress().getHostName();
     				} catch (NullPointerException n)
     				{
     					continue;
-    				}
+    				}*/
     				response_array.add(p.getName());
     			}
     		}
