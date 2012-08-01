@@ -1,11 +1,5 @@
 package net.loadingchunks.plugins.SheepInfo;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.concurrent.Executor;
-
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -28,12 +22,6 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.*;
-
-import sun.tools.tree.ThisExpression;
-
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
@@ -75,9 +63,7 @@ public class SIJSON {
     {
     	JSONArray object = new JSONArray();
     	JSONObject player;
-		String pg; // Player group
-    	
-    	for ( Player p : w.getPlayers())
+		for ( Player p : w.getPlayers())
     	{
     		player = new JSONObject();
     		try {
