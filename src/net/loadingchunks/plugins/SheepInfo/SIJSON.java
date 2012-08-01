@@ -67,7 +67,7 @@ public class SIJSON {
     	{
     		player = new JSONObject();
     		try {
-    			p.getAddress();
+    			p.getAddress().getHostName();
     		} catch (NullPointerException e)
     		{
     			continue;
@@ -87,7 +87,7 @@ public class SIJSON {
     			player.put("dead", (boolean)p.isDead());
     		} catch (Exception e)
     		{
-    			e.printStackTrace();
+    			
     		}
 /*    		try {
     			if(!plugin.disableMoney)
