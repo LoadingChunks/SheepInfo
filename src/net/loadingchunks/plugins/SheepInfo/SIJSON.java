@@ -67,6 +67,12 @@ public class SIJSON {
     	{
     		player = new JSONObject();
     		try {
+    			p.getAddress();
+    		} catch (NullPointerException e)
+    		{
+    			continue;
+    		}
+    		try {
     			player.put("name", p.getName());
     			player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
     			if(this.plugin.getConfig().getBoolean("sheep.keys.ip"))
