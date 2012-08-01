@@ -24,7 +24,7 @@ public class SIHTTPD {
     public boolean Listen()
     {
 		try {
-			this.server = HttpServer.create(new InetSocketAddress(Integer.parseInt(this.plugin.siConfig.get("bind_port"))), 0);
+			this.server = HttpServer.create(new InetSocketAddress(this.plugin.getConfig().getInt("sheep.bind.port")), 0);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			return false;

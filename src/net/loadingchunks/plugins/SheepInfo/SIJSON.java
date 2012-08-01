@@ -83,7 +83,7 @@ public class SIJSON {
     		try {
     			player.put("name", p.getName());
     			player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
-    		//	if(this.plugin.siConfig.get("keys_ip").equalsIgnoreCase("yes"))
+    			if(this.plugin.getConfig().getBoolean("sheep.keys.ip"))
     				player.put("ip", p.getAddress().getHostName());
     			player.put("x", (double)p.getLocation().getX());
     			player.put("y", (double)p.getLocation().getY());

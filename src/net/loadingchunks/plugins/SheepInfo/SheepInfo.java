@@ -41,16 +41,11 @@ public class SheepInfo extends JavaPlugin {
         // Get the config.
         
         System.out.println("[SHEEPINFO] Loading config file plugins/SheepInfo/config.yml...");
-        Configuration _config = new Configuration(new File("plugins/SheepInfo/config.yml"));
         
-        _config.load();
+        this.getConfig();
         
         System.out.println("Loaded SheepInfo Config Successfully!");
-        
-        siConfig.put("bind_addr", _config.getString("sheep.bind.address"));
-        siConfig.put("bind_port", _config.getString("sheep.bind.port"));
-        
-        siConfig.put("keys_ip", _config.getString("sheep.keys.ip"));
+
         
         System.out.println("SheepInfo Config saved to memory.");
         
