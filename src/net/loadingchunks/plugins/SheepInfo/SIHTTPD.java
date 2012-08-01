@@ -3,16 +3,12 @@ package net.loadingchunks.plugins.SheepInfo;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executor;
-
 import org.bukkit.World;
 import org.json.simple.*;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.xml.internal.ws.transport.Headers;
-
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
 public class SIHTTPD {

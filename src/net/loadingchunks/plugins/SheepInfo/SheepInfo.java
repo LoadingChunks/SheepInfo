@@ -14,7 +14,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
-import com.iConomy.*;
 
 /**
  * GuardWolf Ban System plugin for Bukkit
@@ -25,9 +24,7 @@ public class SheepInfo extends JavaPlugin {
 	public final HashMap<String, String> siConfig = new HashMap<String, String>();
 	public final SIHTTPD httpd = new SIHTTPD(this);
 	public List<World> worlds;
-	public iConomy iConomy = null;
 	public boolean disableMoney = false;
-	public SIPermissions perm = new SIPermissions(this);
 	public boolean disableGroups = false;
 
     public void onDisable() {
@@ -47,20 +44,6 @@ public class SheepInfo extends JavaPlugin {
         Configuration _config = new Configuration(new File("plugins/SheepInfo/config.yml"));
         
         _config.load();
-        
-        Plugin p = this.getServer().getPluginManager().getPlugin("iConomy");
-        if(p != null)
-        {
-        	System.out.println("[SHEEPINFO] iConomy detected, initialising link...");
-        	if (!this.getServer().getPluginManager().isPluginEnabled(p))
-        		this.getServer().getPluginManager().enablePlugin(p);
-        	iConomy = (iConomy) p;
-        } else {
-        	System.out.println("[SHEEPINFO] iConomy not found! :(");
-        	this.disableMoney = true;
-        }
-        
-        this.perm.setupPermissions();
         
         System.out.println("Loaded SheepInfo Config Successfully!");
         
