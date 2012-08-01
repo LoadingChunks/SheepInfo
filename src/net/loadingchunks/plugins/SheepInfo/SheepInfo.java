@@ -27,11 +27,7 @@ public class SheepInfo extends JavaPlugin {
         System.out.println("[SHEEPINFO] Killed HTTPD Server.");
     }
 
-    public void onEnable() {        
-        // Register events
-        
-        getServer().getPluginManager();
-        
+    public void onEnable() {
         // Get the config.
         
         System.out.println("[SHEEPINFO] Loading config file plugins/SheepInfo/config.yml...");
@@ -50,7 +46,7 @@ public class SheepInfo extends JavaPlugin {
         PluginDescriptionFile pdfFile = this.getDescription();
         System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
         
-        System.out.println("[SHEEPINFO] Starting SheepInfo HTTPD on " + siConfig.get("bind_addr") + ":" + siConfig.get("bind_port"));
+        System.out.println("[SHEEPINFO] Starting SheepInfo HTTPD on " + this.getConfig().getString("sheep.bind.addr") + ":" + this.getConfig().getInt("sheep.bind.port"));
         if(!httpd.Listen())
         	System.out.println("[SHEEPINFO] Error starting SheepInfo HTTPD!");
         else
