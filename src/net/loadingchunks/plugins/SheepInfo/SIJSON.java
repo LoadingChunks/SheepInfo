@@ -7,7 +7,7 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingSand;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
@@ -38,24 +38,16 @@ public class SIJSON {
     	JSONObject object = new JSONObject();
     	try {
     		object.put("name", w.getName());
-    		object.put("players", new Integer(w.getPlayers().size()));
-    		object.put("chunks", new Integer(w.getLoadedChunks().length));
-    		object.put("entities", new Integer(w.getLivingEntities().size()));
-    		object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
-    		object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
-    		object.put("time", new Long(w.getTime()));
+    		object.put("players", (int)w.getPlayers().size());
+    		object.put("chunks", (int)w.getLoadedChunks().length);
+    		object.put("entities", (int)w.getLivingEntities().size());
+    		object.put("max_mem", (long)Runtime.getRuntime().maxMemory());
+    		object.put("free_mem", (long)Runtime.getRuntime().freeMemory());
+    		object.put("time", (long)w.getTime());
     	} catch(Exception e)
     	{
     		e.printStackTrace();
     	}
-    	/*if(!plugin.disableMoney)
-    	{
-    		object.put("currency", this.plugin.iConomy);
-    		double totalCurrency = 0;
-    		for (Double value : plugin.iConomy.getBank().getAccounts().values())
-    			totalCurrency += value;
-    		object.put("eco_total", totalCurrency);
-    	}*/
     	return object;
     }
     
@@ -83,30 +75,15 @@ public class SIJSON {
     			player.put("holding", (int)p.getItemInHand().getTypeId());
     			player.put("holding_dmg", (int)p.getItemInHand().getDurability());
     			player.put("health", (int)p.getHealth());
+    			player.put("hunger", (int)p.getFoodLevel());
     			player.put("air", (int)p.getRemainingAir());
     			player.put("dead", (boolean)p.isDead());
+    			player.put("level", (int)p.getLevel());
+    			player.put("total_exp", (int)p.getTotalExperience());
     		} catch (Exception e)
     		{
     			
     		}
-/*    		try {
-    			if(!plugin.disableMoney)
-    			{
-    				player.put("money", plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
-    			}
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    		}*/
-    		/*try {
-    			if(!plugin.disableGroups)
-    			{
-    				//player.put("gm_group", this.plugin.perm.UserGroup(p));
-    				player.put("gm_prefix", this.plugin.perm.UserPrefix(p));
-    				player.put("gm_suffix", this.plugin.perm.UserSuffix(p));
-    			}
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    		}*/
 
     		if(inventory)
     		{
@@ -168,7 +145,7 @@ public class SIJSON {
     			projectiles++;
     		else if(e instanceof TNTPrimed)
     			active_tnt++;
-    		else if(e instanceof FallingSand || e instanceof FallingSand)
+    		else if(e instanceof FallingBlock || e instanceof FallingBlock)
     			falling++;
     		else if(e instanceof Squid)
     			squids++;
