@@ -22,14 +22,15 @@ public class SIHTTPD {
         infoget = new SIJSON(instance);
     }
     
-    public boolean Listen()
-    {
+    public boolean Listen() {
 		try {
 			this.server = HttpServer.create(new InetSocketAddress(this.plugin.getConfig().getInt("sheep.bind.port")), 0);
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			e.printStackTrace();
 			return false;
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -43,16 +44,14 @@ public class SIHTTPD {
     	return true;
     }
     
-    public void Kill()
-    {
+    public void Kill() {
     	this.server.stop(0);
     }
     
     static class SInfoHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
-    	public SInfoHandler(SIHTTPD instance)
-    	{
+    	public SInfoHandler(SIHTTPD instance) {
     		this.httpd = instance;
     	}
     	
@@ -60,8 +59,7 @@ public class SIHTTPD {
     		JSONObject response_object = new JSONObject();
     		JSONObject worlds_object;
     		
-    		for( World w : this.httpd.plugin.worlds)
-    		{
+    		for (World w : this.httpd.plugin.worlds) {
     			worlds_object = new JSONObject();
     			worlds_object.put("core", this.httpd.infoget.Info(w, this.httpd.plugin));
     			worlds_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
@@ -83,22 +81,19 @@ public class SIHTTPD {
     static class SIPlayerHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
-    	public SIPlayerHandler(SIHTTPD instance)
-    	{
+    	public SIPlayerHandler(SIHTTPD instance) {
     		this.httpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONArray response_array = new JSONArray();
     		
-    		for( World w : this.httpd.plugin.worlds)
-    		{
-    			for ( Player p : w.getPlayers() )
-    			{
+    		for (World w : this.httpd.plugin.worlds) {
+    			for (Player p : w.getPlayers()) {
     				try {
     					p.getAddress().getHostName();
-    				} catch (NullPointerException n)
-    				{
+    				}
+    				catch (NullPointerException n) {
     					continue;
     				}
     				response_array.add(p.getName());
@@ -120,16 +115,14 @@ public class SIHTTPD {
     static class SIEntityHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
-    	public SIEntityHandler(SIHTTPD instance)
-    	{
+    	public SIEntityHandler(SIHTTPD instance) {
     		this.httpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
     		
-    		for ( World w : this.httpd.plugin.worlds )
-    		{
+    		for (World w : this.httpd.plugin.worlds) {
     			response_object.put(w.getName(), this.httpd.infoget.Entities(w));
     		}
     		
@@ -148,16 +141,14 @@ public class SIHTTPD {
     static class SInventoryHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
-    	public SInventoryHandler(SIHTTPD instance)
-    	{
+    	public SInventoryHandler(SIHTTPD instance) {
     		this.httpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
     		
-    		for ( World w : this.httpd.plugin.worlds )
-    		{
+    		for (World w : this.httpd.plugin.worlds) {
     			response_object.put(w.getName(), this.httpd.infoget.Players(w, true, this.httpd.plugin));
     		}
     		
