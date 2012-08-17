@@ -7,12 +7,11 @@ import java.util.List;
 import org.bukkit.World;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.PluginManager;
 
 /**
- * GuardWolf Ban System plugin for Bukkit
+ * SheepInfo stats reporting system plugin for Bukkit
  *
- * @author Cue
+ * @author Cue, origamiguy
  */
 public class SheepInfo extends JavaPlugin {
 	public final HashMap<String, String> siConfig = new HashMap<String, String>();
@@ -34,17 +33,17 @@ public class SheepInfo extends JavaPlugin {
         
         this.getConfig();
         
+        // Although we're not actually checking... GG
         System.out.println("Loaded SheepInfo Config Successfully!");
 
-        
+        // IT LIES!
         System.out.println("SheepInfo Config saved to memory.");
         
         worlds = this.getServer().getWorlds();
         System.out.println("[SHEEPINFO] Generated Worlds List.");
 
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
         PluginDescriptionFile pdfFile = this.getDescription();
-        System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
+        System.out.println(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
         
         System.out.println("[SHEEPINFO] Starting SheepInfo HTTPD on " + this.getConfig().getString("sheep.bind.addr") + ":" + this.getConfig().getInt("sheep.bind.port"));
         if(!httpd.Listen())
