@@ -7,7 +7,7 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingSand;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
@@ -29,47 +29,36 @@ import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 public class SIJSON {
     private final SheepInfo plugin;
 
-    public SIJSON (SheepInfo instance) {
+    public SIJSON(SheepInfo instance) {
         this.plugin = instance;
     }
     
-    public JSONObject Info(World w, SheepInfo plugin)
-    {
+    public JSONObject Info(World w, SheepInfo plugin) {
     	JSONObject object = new JSONObject();
     	try {
     		object.put("name", w.getName());
-    		object.put("players", new Integer(w.getPlayers().size()));
-    		object.put("chunks", new Integer(w.getLoadedChunks().length));
-    		object.put("entities", new Integer(w.getLivingEntities().size()));
-    		object.put("max_mem", new Long( Runtime.getRuntime().maxMemory()));
-    		object.put("free_mem", new Long(Runtime.getRuntime().freeMemory()));
-    		object.put("time", new Long(w.getTime()));
-    	} catch(Exception e)
-    	{
+    		object.put("players", (int)w.getPlayers().size());
+    		object.put("chunks", (int)w.getLoadedChunks().length);
+    		object.put("entities", (int)w.getLivingEntities().size());
+    		object.put("max_mem", (long)Runtime.getRuntime().maxMemory());
+    		object.put("free_mem", (long)Runtime.getRuntime().freeMemory());
+    		object.put("time", (long)w.getTime());
+    	}
+    	catch (Exception e) {
     		e.printStackTrace();
     	}
-    	/*if(!plugin.disableMoney)
-    	{
-    		object.put("currency", this.plugin.iConomy);
-    		double totalCurrency = 0;
-    		for (Double value : plugin.iConomy.getBank().getAccounts().values())
-    			totalCurrency += value;
-    		object.put("eco_total", totalCurrency);
-    	}*/
     	return object;
     }
     
-    public JSONArray Players(World w, Boolean inventory, SheepInfo plugin)
-    {
+    public JSONArray Players(World w, Boolean inventory, SheepInfo plugin) {
     	JSONArray object = new JSONArray();
     	JSONObject player;
-		for ( Player p : w.getPlayers())
-    	{
+		for (Player p : w.getPlayers()) {
     		player = new JSONObject();
     		try {
     			p.getAddress().getHostName();
-    		} catch (NullPointerException e)
-    		{
+    		}
+    		catch (NullPointerException e) {
     			continue;
     		}
     		try {
@@ -83,33 +72,17 @@ public class SIJSON {
     			player.put("holding", (int)p.getItemInHand().getTypeId());
     			player.put("holding_dmg", (int)p.getItemInHand().getDurability());
     			player.put("health", (int)p.getHealth());
+    			player.put("hunger", (int)p.getFoodLevel());
     			player.put("air", (int)p.getRemainingAir());
     			player.put("dead", (boolean)p.isDead());
-    		} catch (Exception e)
-    		{
+    			player.put("level", (int)p.getLevel());
+    			player.put("total_exp", (int)p.getTotalExperience());
+    		}
+    		catch (Exception e) {
     			
     		}
-/*    		try {
-    			if(!plugin.disableMoney)
-    			{
-    				player.put("money", plugin.iConomy.getBank().getAccount(p.getName()).getBalance());
-    			}
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    		}*/
-    		/*try {
-    			if(!plugin.disableGroups)
-    			{
-    				//player.put("gm_group", this.plugin.perm.UserGroup(p));
-    				player.put("gm_prefix", this.plugin.perm.UserPrefix(p));
-    				player.put("gm_suffix", this.plugin.perm.UserSuffix(p));
-    			}
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    		}*/
 
-    		if(inventory)
-    		{
+    		if (inventory) {
     			player.put("inventory", this.Inventories(p));
     		}
     		
@@ -118,20 +91,16 @@ public class SIJSON {
     	return object;
     }
     
-    public JSONArray Inventories(Player p)
-    {
+    public JSONArray Inventories(Player p) {
     	JSONArray inventory = new JSONArray();
     	JSONObject item;
     	
     	ItemStack[] list = p.getInventory().getContents();
     	
-    	for(int j = 0; j < list.length; j++)
-   		{
-    		if(list[j] != null)
-    		{
+    	for (int j = 0; j < list.length; j++) {
+    		if (list[j] != null) {
     			item = new JSONObject();
-    			if(list[j].getTypeId() > 0)
-    			{
+    			if (list[j].getTypeId() > 0) {
     				item.put("id", (int)list[j].getTypeId());
     				item.put("amount", (int)list[j].getAmount());
     				item.put("durability", (int)list[j].getDurability());
@@ -143,40 +112,37 @@ public class SIJSON {
     	return inventory;
     }
     
-    public JSONObject Entities(World w)
-    {
+    public JSONObject Entities(World w) {
     	JSONObject object = new JSONObject();
     	int creepers = 0,minecarts = 0,boats = 0,zombies = 0,pickups = 0,slimes = 0,arrows = 0,projectiles = 0,active_tnt = 0,falling = 0,squids = 0,wolves = 0,ghasts = 0;
    	
-    	for(Entity e : w.getEntities())
-    	{
-    		if(e instanceof Creeper)
+    	for (Entity e : w.getEntities()) {
+    		if (e instanceof Creeper)
     			creepers++;
-    		else if(e instanceof Minecart || e instanceof PoweredMinecart || e instanceof StorageMinecart)
+    		else if (e instanceof Minecart || e instanceof PoweredMinecart || e instanceof StorageMinecart)
     			minecarts++;
-    		else if(e instanceof Boat)
+    		else if (e instanceof Boat)
     			boats++;
-    		else if(e instanceof Zombie)
+    		else if (e instanceof Zombie)
     			zombies++;
-    		else if(e instanceof Item)
+    		else if (e instanceof Item)
     			pickups++;
-    		else if(e instanceof Slime)
+    		else if (e instanceof Slime)
     			slimes++;
-    		else if(e instanceof Arrow)
+    		else if (e instanceof Arrow)
     			arrows++;
-    		else if(e instanceof Snowball || e instanceof Egg)
+    		else if (e instanceof Snowball || e instanceof Egg)
     			projectiles++;
-    		else if(e instanceof TNTPrimed)
+    		else if (e instanceof TNTPrimed)
     			active_tnt++;
-    		else if(e instanceof FallingSand || e instanceof FallingSand)
+    		else if (e instanceof FallingBlock || e instanceof FallingBlock)
     			falling++;
-    		else if(e instanceof Squid)
+    		else if (e instanceof Squid)
     			squids++;
-    		else if(e instanceof Wolf)
+    		else if (e instanceof Wolf)
     			wolves++;
-    		else if(e instanceof Ghast)
+    		else if (e instanceof Ghast)
     			ghasts++;
-    		
     	}
     	
     	object.put("creepers", creepers);
@@ -194,5 +160,4 @@ public class SIJSON {
     	object.put("ghasts", ghasts);
     	return object;
     }
-    
 }
