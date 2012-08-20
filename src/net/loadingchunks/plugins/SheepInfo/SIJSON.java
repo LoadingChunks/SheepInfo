@@ -1,13 +1,17 @@
 package net.loadingchunks.plugins.SheepInfo;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.FallingSand;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
@@ -21,6 +25,7 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.json.simple.*;
 
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
@@ -37,7 +42,8 @@ public class SIJSON {
     	JSONObject object = new JSONObject();
     	try {
     		object.put("name", w.getName());
-    		object.put("players", (int)w.getPlayers().size());
+    		// we already have the players array, we don't /need/ this.
+    		// object.put("players", (int)w.getPlayers().size());
     		object.put("chunks", (int)w.getLoadedChunks().length);
     		object.put("entities", (int)w.getLivingEntities().size());
     		object.put("max_mem", (long)Runtime.getRuntime().maxMemory());
@@ -77,6 +83,7 @@ public class SIJSON {
     			player.put("dead", (boolean)p.isDead());
     			player.put("level", (int)p.getLevel());
     			player.put("total_exp", (int)p.getTotalExperience());
+    			player.put("potion_fx", this.PotionEffects(p));
     		}
     		catch (Exception e) {
     			
@@ -91,25 +98,47 @@ public class SIJSON {
     	return object;
     }
     
-    public JSONArray Inventories(Player p) {
-    	JSONArray inventory = new JSONArray();
-    	JSONObject item;
+    public JSONObject Inventories(Player p) {
+    	JSONObject inventory = new JSONObject();
     	
     	ItemStack[] list = p.getInventory().getContents();
     	
     	for (int j = 0; j < list.length; j++) {
     		if (list[j] != null) {
-    			item = new JSONObject();
+    			JSONObject item = new JSONObject();
     			if (list[j].getTypeId() > 0) {
     				item.put("id", (int)list[j].getTypeId());
     				item.put("amount", (int)list[j].getAmount());
     				item.put("durability", (int)list[j].getDurability());
-    				item.put("slot", (int)j);
-    				inventory.add(item);
-    			}
+    				//item.put("slot", (int)j);
+    				item.put("enchantments", this.Enchantments(list[j]));
+        			inventory.put((int)j, item);
+				}
     		}
     	}
     	return inventory;
+    }
+    
+    private JSONObject Enchantments(ItemStack item) {
+    	JSONObject enchants_json = new JSONObject();
+		Map<Enchantment, Integer> enchants = item.getEnchantments();
+		Set<Enchantment> enchant_list = enchants.keySet();
+		for (Enchantment key : enchant_list) {
+			enchants_json.put(key.getId(), enchants.get(key));
+		}
+		return enchants_json;
+    }
+    
+    private JSONArray PotionEffects(Player p) {
+    	JSONArray potion_effects = new JSONArray();
+    	for (PotionEffect pe : p.getActivePotionEffects()) {
+    		JSONObject effect = new JSONObject();
+    		effect.put("id", pe.getType().getId());
+    		effect.put("duration", pe.getDuration());
+    		effect.put("amplifier", pe.getAmplifier());
+    		potion_effects.add(effect);
+    	}
+    	return potion_effects;
     }
     
     public JSONObject Entities(World w) {
@@ -135,7 +164,7 @@ public class SIJSON {
     			projectiles++;
     		else if (e instanceof TNTPrimed)
     			active_tnt++;
-    		else if (e instanceof FallingBlock || e instanceof FallingBlock)
+    		else if (e instanceof FallingSand)
     			falling++;
     		else if (e instanceof Squid)
     			squids++;
