@@ -48,6 +48,16 @@ public class SIHTTPD {
     	this.server.stop(0);
     }
     
+    static void GenericJSONHandle(HttpExchange t, String response) throws IOException {
+		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
+		h.add("Content-Type", "application/json");
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+    }
+    
     static class SInfoHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
@@ -65,16 +75,8 @@ public class SIHTTPD {
     			worlds_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
     			response_object.put(w.getName(), worlds_object);
     		}
-    		
-    		String response = response_object.toJSONString();
-    		
-    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
-    		h.add("Content-Type", "application/json");
 
-    		t.sendResponseHeaders(200, response.length());
-    		OutputStream os = t.getResponseBody();
-    		os.write(response.getBytes());
-    		os.close();
+    		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
     	}
     }
     
@@ -100,15 +102,7 @@ public class SIHTTPD {
     			}
     		}
     		
-    		String response = response_array.toJSONString();
-    		
-    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
-    		h.add("Content-Type", "application/json");
-
-    		t.sendResponseHeaders(200, response.length());
-    		OutputStream os = t.getResponseBody();
-    		os.write(response.getBytes());
-    		os.close();
+    		SIHTTPD.GenericJSONHandle(t, response_array.toJSONString());
     	}
     }
     
@@ -125,16 +119,8 @@ public class SIHTTPD {
     		for (World w : this.httpd.plugin.worlds) {
     			response_object.put(w.getName(), this.httpd.infoget.Entities(w));
     		}
-    		
-    		String response = response_object.toJSONString();
 
-    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
-    		h.add("Content-Type", "application/json");
-    		
-    		t.sendResponseHeaders(200, response.length());
-    		OutputStream os = t.getResponseBody();
-    		os.write(response.getBytes());
-    		os.close();
+    		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
     	}
     }
     
@@ -149,18 +135,12 @@ public class SIHTTPD {
     		JSONObject response_object = new JSONObject();
     		
     		for (World w : this.httpd.plugin.worlds) {
-    			response_object.put(w.getName(), this.httpd.infoget.Players(w, true, this.httpd.plugin));
+    			for (Player p : w.getPlayers()) {
+    				response_object.put(p.getName(), this.httpd.infoget.Inventories(p));
+    			}
     		}
-    		
-    		String response = response_object.toJSONString();
 
-    		com.sun.net.httpserver.Headers h = t.getResponseHeaders();
-    		h.add("Content-Type", "application/json");
-    		
-    		t.sendResponseHeaders(200, response.length());
-    		OutputStream os = t.getResponseBody();
-    		os.write(response.getBytes());
-    		os.close();
+    		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
     	}
     }
     
