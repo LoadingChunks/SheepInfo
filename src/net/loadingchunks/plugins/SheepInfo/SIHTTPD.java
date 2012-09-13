@@ -34,10 +34,11 @@ public class SIHTTPD {
 			e.printStackTrace();
 			return false;
 		}
-    	this.server.createContext("/info", new SIInfoHandler(this));
+    	this.server.createContext("/worlds", new SIWorldHandler(this));
     	this.server.createContext("/memory", new SIMemoryHandler(this));
     	this.server.createContext("/inventory", new SInventoryHandler(this));
-    	this.server.createContext("/entities", new SIEntityHandler(this));
+    	// Do we ever actually use this one?
+    	//this.server.createContext("/entities", new SIEntityHandler(this));
     	this.server.createContext("/players", new SIPlayerHandler(this));
     	this.server.createContext("/", new SIDefaultHandler());
     	this.server.setExecutor(null);
@@ -59,21 +60,18 @@ public class SIHTTPD {
 		os.close();
     }
     
-    static class SIInfoHandler implements HttpHandler {
+    static class SIWorldHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
-    	public SIInfoHandler(SIHTTPD instance) {
+    	public SIWorldHandler(SIHTTPD instance) {
     		this.httpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
-    		// I feel dirty doing this...
     		JSONArray response_object = new JSONArray();
     		
     		for (World w : this.httpd.plugin.worlds) {
-    			JSONObject world_object = new JSONObject();
-    			world_object.put("core", this.httpd.infoget.Info(w, this.httpd.plugin));
-    			world_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
+    			JSONObject world_object = this.httpd.infoget.World(w, this.httpd.plugin);
     			response_object.add(world_object);
     		}
 
@@ -103,21 +101,15 @@ public class SIHTTPD {
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
-    		JSONArray response_array = new JSONArray();
+    		JSONArray response_object = new JSONArray();
     		
     		for (World w : this.httpd.plugin.worlds) {
-    			for (Player p : w.getPlayers()) {
-    				try {
-    					p.getAddress().getHostName();
-    				}
-    				catch (NullPointerException n) {
-    					continue;
-    				}
-    				response_array.add(p.getName());
-    			}
+    			JSONArray players_array = this.httpd.infoget.Players(w, false, this.httpd.plugin);
+    			for (int i = 0; i < players_array.size(); i++)
+    				response_object.add(players_array.get(i));
     		}
-    		
-    		SIHTTPD.GenericJSONHandle(t, response_array.toJSONString());
+
+    		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
     	}
     }
     
@@ -161,7 +153,7 @@ public class SIHTTPD {
     
     static class SIDefaultHandler implements HttpHandler {
     	public void handle(HttpExchange t) throws IOException {
-    		String response = "Try /info to get MC Server Info.";
+    		String response = "SheepInfo API:\n/worlds \t- returns an array of worlds\n/players \t- returns an array of players\n/memory \t- returns free and total memory of the server\n/inventory \t- returns an associative array of player inventories\n/entities \t- provides a count of each type of entity";
     		t.sendResponseHeaders(200, response.length());
     		OutputStream os = t.getResponseBody();
     		os.write(response.getBytes());

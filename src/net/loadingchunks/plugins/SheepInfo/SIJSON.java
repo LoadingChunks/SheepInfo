@@ -38,12 +38,13 @@ public class SIJSON {
         this.plugin = instance;
     }
     
-    public JSONObject Info(World w, SheepInfo plugin) {
+    public JSONObject World(World w, SheepInfo plugin) {
     	JSONObject object = new JSONObject();
     	try {
     		object.put("name", w.getName());
     		object.put("chunks", (int)w.getLoadedChunks().length);
     		object.put("entities", (int)w.getLivingEntities().size());
+    		object.put("players", (int)w.getPlayers().size());
     		object.put("time", (long)w.getTime());
     	}
     	catch (Exception e) {
@@ -91,8 +92,10 @@ public class SIJSON {
     			player.put("air", (int)p.getRemainingAir());
     			player.put("dead", (boolean)p.isDead());
     			player.put("level", (int)p.getLevel());
+    			player.put("exp", (int)p.getExp());
     			player.put("total_exp", (int)p.getTotalExperience());
     			player.put("potion_fx", this.PotionEffects(p));
+    			player.put("world", p.getWorld().getName());
     		}
     		catch (Exception e) {
     			
