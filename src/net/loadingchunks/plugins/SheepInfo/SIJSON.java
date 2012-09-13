@@ -1,30 +1,18 @@
 package net.loadingchunks.plugins.SheepInfo;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingSand;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Minecart;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.StorageMinecart;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.json.simple.*;
 
@@ -38,167 +26,174 @@ public class SIJSON {
         this.plugin = instance;
     }
     
-    public JSONObject World(World w, SheepInfo plugin) {
-    	JSONObject object = new JSONObject();
+    public JSONArray Worlds(Collection<World> worlds) {
+    	JSONArray json = new JSONArray();
     	try {
-    		object.put("name", w.getName());
-    		object.put("chunks", (int)w.getLoadedChunks().length);
-    		object.put("entities", (int)w.getLivingEntities().size());
-    		object.put("players", (int)w.getPlayers().size());
-    		object.put("time", (long)w.getTime());
+    		for (World w : worlds)
+    			json.add(this.World(w));
     	}
     	catch (Exception e) {
     		e.printStackTrace();
     	}
-    	return object;
+    	return json;
     }
     
-    public JSONObject Memory(SheepInfo plugin) {
-    	JSONObject object = new JSONObject();
+    public JSONObject World(World world) {
+    	JSONObject json = new JSONObject();
     	try {
-    		// they're not world-specific, they shouldn't have been under the worlds.
-    		object.put("max_mem", (long)Runtime.getRuntime().maxMemory());
-    		object.put("free_mem", (long)Runtime.getRuntime().freeMemory());
+    		json.put("name", world.getName());
+    		json.put("chunks", world.getLoadedChunks().length);
+    		json.put("entities", world.getLivingEntities().size());
+    		json.put("players", world.getPlayers().size());
+    		json.put("time", world.getTime());
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    public JSONObject Memory() {
+    	JSONObject json = new JSONObject();
+    	try {
+    		json.put("max_mem", Runtime.getRuntime().maxMemory());
+    		json.put("free_mem", Runtime.getRuntime().freeMemory());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-    	return object;
+    	return json;
     }
     
-    public JSONArray Players(World w, Boolean inventory, SheepInfo plugin) {
-    	JSONArray object = new JSONArray();
-    	JSONObject player;
-		for (Player p : w.getPlayers()) {
-    		player = new JSONObject();
-    		try {
-    			p.getAddress().getHostName();
-    		}
-    		catch (NullPointerException e) {
-    			continue;
-    		}
-    		try {
-    			player.put("name", p.getName());
-    			player.put("nickname", ChatColor.stripColor(p.getDisplayName()));
-    			if(this.plugin.getConfig().getBoolean("sheep.keys.ip"))
-    				player.put("ip", p.getAddress().getHostName());
-    			player.put("x", (double)p.getLocation().getX());
-    			player.put("y", (double)p.getLocation().getY());
-    			player.put("z", (double)p.getLocation().getZ());
-    			player.put("holding", (int)p.getItemInHand().getTypeId());
-    			player.put("holding_dmg", (int)p.getItemInHand().getDurability());
-    			player.put("health", (int)p.getHealth());
-    			player.put("hunger", (int)p.getFoodLevel());
-    			player.put("air", (int)p.getRemainingAir());
-    			player.put("dead", (boolean)p.isDead());
-    			player.put("level", (int)p.getLevel());
-    			player.put("exp", (int)p.getExp());
-    			player.put("total_exp", (int)p.getTotalExperience());
-    			player.put("potion_fx", this.PotionEffects(p));
-    			player.put("world", p.getWorld().getName());
-    		}
-    		catch (Exception e) {
-    			
-    		}
-
-    		if (inventory) {
-    			player.put("inventory", this.Inventories(p));
-    		}
-    		
-    		object.add(player);
-    	}
-    	return object;
-    }
-    
-    public JSONObject Inventories(Player p) {
-    	JSONObject inventory = new JSONObject();
-    	
-    	ItemStack[] list = p.getInventory().getContents();
-    	
-    	for (int j = 0; j < list.length; j++) {
-    		if (list[j] != null) {
-    			JSONObject item = new JSONObject();
-    			if (list[j].getTypeId() > 0) {
-    				item.put("id", (int)list[j].getTypeId());
-    				item.put("amount", (int)list[j].getAmount());
-    				item.put("durability", (int)list[j].getDurability());
-    				//item.put("slot", (int)j);
-    				item.put("enchantments", this.Enchantments(list[j]));
-        			inventory.put((int)j, item);
-				}
-    		}
-    	}
-    	return inventory;
-    }
-    
-    private JSONObject Enchantments(ItemStack item) {
-    	JSONObject enchants_json = new JSONObject();
-		Map<Enchantment, Integer> enchants = item.getEnchantments();
-		Set<Enchantment> enchant_list = enchants.keySet();
-		for (Enchantment key : enchant_list) {
-			enchants_json.put(key.getId(), enchants.get(key));
+    public JSONArray Players(Boolean inventory) {
+    	JSONArray json = new JSONArray();
+    	try {
+    		for (Player p : this.plugin.getOnlinePlayers())
+    			json.add(this.Player(p, inventory));
 		}
-		return enchants_json;
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return json;
     }
     
-    private JSONArray PotionEffects(Player p) {
-    	JSONArray potion_effects = new JSONArray();
-    	for (PotionEffect pe : p.getActivePotionEffects()) {
-    		JSONObject effect = new JSONObject();
-    		effect.put("id", pe.getType().getId());
-    		effect.put("duration", pe.getDuration());
-    		effect.put("amplifier", pe.getAmplifier());
-    		potion_effects.add(effect);
-    	}
-    	return potion_effects;
+    public JSONObject Player(Player player, Boolean inventory) {
+    	JSONObject json = new JSONObject();
+		try {
+			player.getAddress().getHostName();
+		}
+		catch (NullPointerException e) {
+			return json;
+		}
+		try {
+			json.put("name", player.getName());
+			json.put("nickname", ChatColor.stripColor(player.getDisplayName()));
+			if (this.plugin.getConfig().getBoolean("sheep.keys.ip"))
+				json.put("ip", player.getAddress().getHostName());
+			json.put("x", player.getLocation().getX());
+			json.put("y", player.getLocation().getY());
+			json.put("z", player.getLocation().getZ());
+			json.put("holding", player.getItemInHand().getTypeId());
+			json.put("holding_dmg", player.getItemInHand().getDurability());
+			json.put("health", player.getHealth());
+			json.put("hunger", player.getFoodLevel());
+			json.put("air", player.getRemainingAir());
+			json.put("dead", player.isDead());
+			json.put("level", player.getLevel());
+			json.put("exp", player.getExp());
+			json.put("total_exp", player.getTotalExperience());
+			json.put("potion_fx", this.PotionEffects(player.getActivePotionEffects()));
+			json.put("world", player.getWorld().getName());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (inventory) {
+			json.put("inventory", this.Inventory(player.getInventory()));
+		}
+		
+    	return json;
     }
     
-    public JSONObject Entities(World w) {
-    	JSONObject object = new JSONObject();
-    	int creepers = 0,minecarts = 0,boats = 0,zombies = 0,pickups = 0,slimes = 0,arrows = 0,projectiles = 0,active_tnt = 0,falling = 0,squids = 0,wolves = 0,ghasts = 0;
-   	
-    	for (Entity e : w.getEntities()) {
-    		if (e instanceof Creeper)
-    			creepers++;
-    		else if (e instanceof Minecart || e instanceof PoweredMinecart || e instanceof StorageMinecart)
-    			minecarts++;
-    		else if (e instanceof Boat)
-    			boats++;
-    		else if (e instanceof Zombie)
-    			zombies++;
-    		else if (e instanceof Item)
-    			pickups++;
-    		else if (e instanceof Slime)
-    			slimes++;
-    		else if (e instanceof Arrow)
-    			arrows++;
-    		else if (e instanceof Snowball || e instanceof Egg)
-    			projectiles++;
-    		else if (e instanceof TNTPrimed)
-    			active_tnt++;
-    		else if (e instanceof FallingSand)
-    			falling++;
-    		else if (e instanceof Squid)
-    			squids++;
-    		else if (e instanceof Wolf)
-    			wolves++;
-    		else if (e instanceof Ghast)
-    			ghasts++;
+    public JSONArray Inventory(PlayerInventory inventory) {
+    	JSONArray json = new JSONArray();
+    	try {
+	    	ItemStack[] list = inventory.getContents();
+	    	
+	    	for (int j = 0; j < list.length; j++) {
+	    		if (list[j] != null) {
+	    			JSONObject json_item = new JSONObject();
+	    			if (list[j].getTypeId() > 0) {
+	    				json_item.put("id", list[j].getTypeId());
+	    				json_item.put("amount", list[j].getAmount());
+	    				json_item.put("durability", list[j].getDurability());
+	    				json_item.put("slot", j);
+	    				json_item.put("enchantments", this.Enchantments(list[j].getEnchantments()));
+	    				json.add(json_item);
+					}
+	    		}
+	    	}
     	}
-    	
-    	object.put("creepers", creepers);
-    	object.put("minecarts", minecarts);
-    	object.put("boats", boats);
-    	object.put("zombies", zombies);
-    	object.put("pickups", pickups);
-    	object.put("slimes", slimes);
-    	object.put("arrows", arrows);
-    	object.put("projectiles", projectiles);
-    	object.put("active_tnt", active_tnt);
-    	object.put("falling", falling);
-    	object.put("squid", squids);
-    	object.put("wolves", wolves);
-    	object.put("ghasts", ghasts);
-    	return object;
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    private JSONObject Enchantments(Map<Enchantment, Integer> enchantments) {
+    	JSONObject json = new JSONObject();
+    	try {
+			Set<Enchantment> enchant_list = enchantments.keySet();
+			for (Enchantment key : enchant_list) {
+				json.put(key.getId(), enchantments.get(key));
+			}
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+		return json ;
+    }
+    
+    private JSONArray PotionEffects(Collection<PotionEffect> potion_effects) {
+    	JSONArray json = new JSONArray();
+    	try {
+    		for (PotionEffect pe : potion_effects) {
+    			JSONObject json_effect = new JSONObject();
+    			json_effect.put("id", pe.getType().getId());
+    			json_effect.put("duration", pe.getDuration());
+    			json_effect.put("amplifier", pe.getAmplifier());
+    			json.add(json_effect);
+    		}
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    public JSONObject Entities(Collection<Entity> entities) {
+    	JSONObject json = new JSONObject();
+    	try {
+	    	Map<Short, Integer> counts = new HashMap<Short, Integer>();
+	    	for (EntityType et : EntityType.values())
+	    		counts.put(et.getTypeId(), 0);
+	   	
+	    	for (Entity e : entities) {
+	    		short key = e.getType().getTypeId();
+    			counts.put(key, counts.get(key) + 1);
+	    	}
+	    	
+	    	for (Map.Entry<Short, Integer> entry : counts.entrySet()) {
+	    		EntityType et = EntityType.fromId(entry.getKey());
+	    		if (et == null)
+	    			continue;
+    			json.put(et.name().toLowerCase(), entry.getValue());
+	        }
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
     }
 }
