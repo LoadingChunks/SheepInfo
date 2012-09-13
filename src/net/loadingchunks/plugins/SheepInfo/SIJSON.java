@@ -42,17 +42,26 @@ public class SIJSON {
     	JSONObject object = new JSONObject();
     	try {
     		object.put("name", w.getName());
-    		// we already have the players array, we don't /need/ this.
-    		// object.put("players", (int)w.getPlayers().size());
     		object.put("chunks", (int)w.getLoadedChunks().length);
     		object.put("entities", (int)w.getLivingEntities().size());
-    		object.put("max_mem", (long)Runtime.getRuntime().maxMemory());
-    		object.put("free_mem", (long)Runtime.getRuntime().freeMemory());
     		object.put("time", (long)w.getTime());
     	}
     	catch (Exception e) {
     		e.printStackTrace();
     	}
+    	return object;
+    }
+    
+    public JSONObject Memory(SheepInfo plugin) {
+    	JSONObject object = new JSONObject();
+    	try {
+    		// they're not world-specific, they shouldn't have been under the worlds.
+    		object.put("max_mem", (long)Runtime.getRuntime().maxMemory());
+    		object.put("free_mem", (long)Runtime.getRuntime().freeMemory());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
     	return object;
     }
     

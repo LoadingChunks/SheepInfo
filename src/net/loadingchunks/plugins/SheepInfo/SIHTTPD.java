@@ -34,7 +34,8 @@ public class SIHTTPD {
 			e.printStackTrace();
 			return false;
 		}
-    	this.server.createContext("/info", new SInfoHandler(this));
+    	this.server.createContext("/info", new SIInfoHandler(this));
+    	this.server.createContext("/memory", new SIMemoryHandler(this));
     	this.server.createContext("/inventory", new SInventoryHandler(this));
     	this.server.createContext("/entities", new SIEntityHandler(this));
     	this.server.createContext("/players", new SIPlayerHandler(this));
@@ -58,24 +59,37 @@ public class SIHTTPD {
 		os.close();
     }
     
-    static class SInfoHandler implements HttpHandler {
+    static class SIInfoHandler implements HttpHandler {
     	private final SIHTTPD httpd;
     	
-    	public SInfoHandler(SIHTTPD instance) {
+    	public SIInfoHandler(SIHTTPD instance) {
     		this.httpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
-    		JSONObject response_object = new JSONObject();
-    		JSONArray worlds_array = new JSONArray();
+    		// I feel dirty doing this...
+    		JSONArray response_object = new JSONArray();
     		
     		for (World w : this.httpd.plugin.worlds) {
     			JSONObject world_object = new JSONObject();
     			world_object.put("core", this.httpd.infoget.Info(w, this.httpd.plugin));
     			world_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
-    			worlds_array.add(world_object);
+    			response_object.add(world_object);
     		}
-    		response_object.put("worlds", worlds_array);
+
+    		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
+    	}
+    }
+    
+    static class SIMemoryHandler implements HttpHandler {
+    	private final SIHTTPD httpd;
+    	
+    	public SIMemoryHandler(SIHTTPD instance) {
+    		this.httpd = instance;
+    	}
+    	
+    	public void handle(HttpExchange t) throws IOException {
+    		JSONObject response_object = this.httpd.infoget.Memory(this.httpd.plugin);
 
     		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
     	}
