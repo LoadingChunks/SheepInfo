@@ -53,11 +53,15 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONObject Memory() {
+    public JSONObject Stats() {
     	JSONObject json = new JSONObject();
     	try {
-    		json.put("max_mem", Runtime.getRuntime().maxMemory());
+    		json.put("players", this.plugin.getOnlinePlayers().length);
+    		json.put("max_players", this.plugin.getServer().getMaxPlayers());
     		json.put("free_mem", Runtime.getRuntime().freeMemory());
+    		json.put("max_mem", Runtime.getRuntime().maxMemory());
+    		json.put("motd", this.plugin.getServer().getMotd());
+    		json.put("version", this.plugin.getServer().getVersion());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
