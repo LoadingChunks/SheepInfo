@@ -45,6 +45,7 @@ public class SIHTTPD {
     	this.server.createContext("/inventories", new SIInventoriesHandler(this));
     	this.server.createContext("/inventory", new SIInventoryHandler(this));
     	this.server.createContext("/memory", new SIMemoryHandler(this));
+    	this.server.createContext("/player", new SIPlayerHandler(this));
     	this.server.createContext("/players", new SIPlayersHandler(this));
     	this.server.createContext("/worlds", new SIWorldsHandler(this));
     	this.server.createContext("/", new SIDefaultHandler());
@@ -147,6 +148,37 @@ public class SIHTTPD {
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = this.httpd.infoget.Memory();
+
+    		SIHTTPD.ServeJSON(t, response_object.toJSONString());
+    	}
+    }
+    
+    static class SIPlayerHandler implements HttpHandler {
+    	private final SIHTTPD httpd;
+    	
+    	public SIPlayerHandler(SIHTTPD instance) {
+    		this.httpd = instance;
+    	}
+    	
+    	public void handle(HttpExchange t) throws IOException {
+    		final String PARAM_PLAYER = "id";
+    		
+    		JSONObject response_object = new JSONObject();
+    		
+    		Map<String, Object> params = parseQuery(t.getRequestURI().getQuery());
+    		
+    		if (params.containsKey(PARAM_PLAYER) && params.get(PARAM_PLAYER) != null) {
+    			Player p = this.httpd.plugin.getServer().getPlayerExact((String)params.get(PARAM_PLAYER));
+    			if (p != null) {
+    				response_object = this.httpd.infoget.Player(p, false);
+    			}
+    			else {
+        			response_object.put("error", "That player has never visited this server.");
+    			}
+    		}
+    		else {
+    			response_object.put("error", "Missing required parameter `" + PARAM_PLAYER + "`.");
+    		}
 
     		SIHTTPD.ServeJSON(t, response_object.toJSONString());
     	}
