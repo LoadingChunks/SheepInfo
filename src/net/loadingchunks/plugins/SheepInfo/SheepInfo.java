@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,14 +17,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class SheepInfo extends JavaPlugin {
 	public final HashMap<String, String> siConfig = new HashMap<String, String>();
 	public final SIHTTPD httpd = new SIHTTPD(this);
-	public List<World> worlds;
 	public boolean disableMoney = false;
 	public boolean disableGroups = false;
 
     public void onDisable() {
     	getLogger().info("Stopping...");
-        this.httpd.Kill();
+        this.httpd.kill();
         getLogger().info("Killed HTTPD Server.");
+    }
+    
+    public List<World> getWorlds() {
+    	return this.getServer().getWorlds();
+    }
+    
+    public Player[] getOnlinePlayers() {
+    	return this.getServer().getOnlinePlayers();
     }
 
     public void onEnable() {
@@ -39,14 +47,11 @@ public class SheepInfo extends JavaPlugin {
         // IT LIES!
         getLogger().info("SheepInfo Config saved to memory.");
         
-        worlds = this.getServer().getWorlds();
-        getLogger().info("Generated Worlds List.");
-
         PluginDescriptionFile pdfFile = this.getDescription();
         getLogger().info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
         
         getLogger().info("Starting SheepInfo HTTPD on " + this.getConfig().getString("sheep.bind.addr") + ":" + this.getConfig().getInt("sheep.bind.port"));
-        if(!httpd.Listen())
+        if(!httpd.listen())
         	getLogger().info("Error starting SheepInfo HTTPD!");
         else
         	getLogger().info("SheepInfo HTTPD successfully listening!");
