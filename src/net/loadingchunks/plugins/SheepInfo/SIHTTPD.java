@@ -67,14 +67,15 @@ public class SIHTTPD {
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
-    		JSONObject worlds_object;
+    		JSONArray worlds_array = new JSONArray();
     		
     		for (World w : this.httpd.plugin.worlds) {
-    			worlds_object = new JSONObject();
-    			worlds_object.put("core", this.httpd.infoget.Info(w, this.httpd.plugin));
-    			worlds_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
-    			response_object.put(w.getName(), worlds_object);
+    			JSONObject world_object = new JSONObject();
+    			world_object.put("core", this.httpd.infoget.Info(w, this.httpd.plugin));
+    			world_object.put("players", this.httpd.infoget.Players(w, false, this.httpd.plugin));
+    			worlds_array.add(world_object);
     		}
+    		response_object.put("worlds", worlds_array);
 
     		SIHTTPD.GenericJSONHandle(t, response_object.toJSONString());
     	}
