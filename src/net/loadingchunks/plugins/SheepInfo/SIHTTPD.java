@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.json.simple.*;
@@ -168,12 +170,27 @@ public class SIHTTPD {
     		Map<String, Object> params = parseQuery(t.getRequestURI().getQuery());
     		
     		if (params.containsKey(PARAM_PLAYER) && params.get(PARAM_PLAYER) != null) {
-    			Player p = this.httpd.plugin.getServer().getPlayerExact((String)params.get(PARAM_PLAYER));
+    			String player_name = (String)params.get(PARAM_PLAYER);
+    			Player p = this.httpd.plugin.getServer().getPlayerExact(player_name);
+    			boolean offline = false;
+    			if (p == null) {
+    				OfflinePlayer[] offlinePlayers = this.httpd.plugin.getServer().getOfflinePlayers();
+    				for (OfflinePlayer op : offlinePlayers)
+        				if (op.getName().equalsIgnoreCase(player_name))
+    						offline = true;
+    			}
     			if (p != null) {
-    				response_object = this.httpd.infoget.Player(p, false);
+    				JSONObject p_json = this.httpd.infoget.Player(p, false); 
+    				if (p_json != null)
+    					response_object = p_json;
+    				else
+    					response_object.put("error", "Unspecified error.");
     			}
     			else {
-        			response_object.put("error", "That player has never visited this server.");
+    				if (offline)
+    					response_object.put("error", "Player is offline.");
+    				else
+    					response_object.put("error", "Player does not exist.");
     			}
     		}
     		else {
