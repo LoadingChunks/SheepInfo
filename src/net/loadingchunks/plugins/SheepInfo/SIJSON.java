@@ -72,8 +72,11 @@ public class SIJSON {
     public JSONArray Players(Boolean inventory) {
     	JSONArray json = new JSONArray();
     	try {
-    		for (Player p : this.plugin.getOnlinePlayers())
-    			json.add(this.Player(p, inventory));
+    		for (Player p : this.plugin.getOnlinePlayers()) {
+    			JSONObject p_json = this.Player(p, inventory);
+    			if (p_json != null)
+    				json.add(p_json);
+    		}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +90,7 @@ public class SIJSON {
 			player.getAddress().getHostName();
 		}
 		catch (NullPointerException e) {
-			return json;
+			return null;
 		}
 		try {
 			json.put("name", player.getName());
