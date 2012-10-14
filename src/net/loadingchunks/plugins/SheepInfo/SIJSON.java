@@ -114,7 +114,7 @@ public class SIJSON {
 			json.put("total_exp", player.getTotalExperience());
 			json.put("potion_fx", getPotionEffects(player.getActivePotionEffects()));
 			json.put("world", player.getWorld().getName());
-			json.put("groups", getPermissionGroups(mPlugin.getPermissionManager().getUser(player)));
+			json.put("permissions", getPermissionsData(mPlugin.getPermissionManager().getUser(player)));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -124,6 +124,19 @@ public class SIJSON {
 			json.put("inventory", getInventory(player.getInventory()));
 		}
 		
+    	return json;
+    }
+    
+    public JSONObject getPermissionsData(PermissionUser user) {
+    	JSONObject json = new JSONObject();
+    	try {
+			json.put("groups", getPermissionGroups(user));
+			json.put("prefix", user.getPrefix());
+			json.put("suffix", user.getSuffix());
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
     	return json;
     }
     
