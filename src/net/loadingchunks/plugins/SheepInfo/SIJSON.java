@@ -16,21 +16,24 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.json.simple.*;
 
+import ru.tehkode.permissions.PermissionGroup;
+import ru.tehkode.permissions.PermissionUser;
+
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
 
 public class SIJSON {
-    private final SheepInfo plugin;
+    private final SheepInfo mPlugin;
 
     public SIJSON(SheepInfo instance) {
-        this.plugin = instance;
+        mPlugin = instance;
     }
     
-    public JSONArray Worlds(Collection<World> worlds) {
+    public JSONArray getWorlds(Collection<World> worlds) {
     	JSONArray json = new JSONArray();
     	try {
     		for (World w : worlds)
-    			json.add(this.World(w));
+    			json.add(getWorld(w));
     	}
     	catch (Exception e) {
     		e.printStackTrace();
@@ -38,7 +41,7 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONObject World(World world) {
+    public JSONObject getWorld(World world) {
     	JSONObject json = new JSONObject();
     	try {
     		json.put("name", world.getName());
@@ -53,15 +56,15 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONObject Stats() {
+    public JSONObject getStats() {
     	JSONObject json = new JSONObject();
     	try {
-    		json.put("players", this.plugin.getOnlinePlayers().length);
-    		json.put("max_players", this.plugin.getServer().getMaxPlayers());
+    		json.put("players", mPlugin.getServer().getOnlinePlayers().length);
+    		json.put("max_players", mPlugin.getServer().getMaxPlayers());
     		json.put("free_mem", Runtime.getRuntime().freeMemory());
     		json.put("max_mem", Runtime.getRuntime().maxMemory());
-    		json.put("motd", this.plugin.getServer().getMotd());
-    		json.put("version", this.plugin.getServer().getVersion());
+    		json.put("motd", mPlugin.getServer().getMotd());
+    		json.put("version", mPlugin.getServer().getVersion());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -69,11 +72,11 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONArray Players(Boolean inventory) {
+    public JSONArray getPlayers(Boolean inventory) {
     	JSONArray json = new JSONArray();
     	try {
-    		for (Player p : this.plugin.getOnlinePlayers()) {
-    			JSONObject p_json = this.Player(p, inventory);
+    		for (Player p : mPlugin.getServer().getOnlinePlayers()) {
+    			JSONObject p_json = getPlayer(p, inventory);
     			if (p_json != null)
     				json.add(p_json);
     		}
@@ -84,7 +87,7 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONObject Player(Player player, Boolean inventory) {
+    public JSONObject getPlayer(Player player, Boolean inventory) {
     	JSONObject json = new JSONObject();
 		try {
 			player.getAddress().getHostName();
@@ -95,7 +98,7 @@ public class SIJSON {
 		try {
 			json.put("name", player.getName());
 			json.put("nickname", ChatColor.stripColor(player.getDisplayName()));
-			if (this.plugin.getConfig().getBoolean("sheep.keys.ip"))
+			if (mPlugin.getConfig().getBoolean("sheep.keys.ip"))
 				json.put("ip", player.getAddress().getHostName());
 			json.put("x", player.getLocation().getX());
 			json.put("y", player.getLocation().getY());
@@ -109,21 +112,60 @@ public class SIJSON {
 			json.put("level", player.getLevel());
 			json.put("exp", player.getExp());
 			json.put("total_exp", player.getTotalExperience());
-			json.put("potion_fx", this.PotionEffects(player.getActivePotionEffects()));
+			json.put("potion_fx", getPotionEffects(player.getActivePotionEffects()));
 			json.put("world", player.getWorld().getName());
+			json.put("permissions", getPermissionsData(mPlugin.getPermissionManager().getUser(player)));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		if (inventory) {
-			json.put("inventory", this.Inventory(player.getInventory()));
+			json.put("inventory", getInventory(player.getInventory()));
 		}
 		
     	return json;
     }
     
-    public JSONArray Inventory(PlayerInventory inventory) {
+    public JSONObject getPermissionsData(PermissionUser user) {
+    	JSONObject json = new JSONObject();
+    	try {
+			json.put("groups", getPermissionGroups(user));
+			json.put("prefix", user.getPrefix());
+			json.put("suffix", user.getSuffix());
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    public JSONObject getPermissionGroups(PermissionUser user) {
+    	JSONObject json = new JSONObject();
+    	try {
+        	Map<String, PermissionGroup> ladders = user.getRankLadders();
+    		for (Map.Entry<String, PermissionGroup> group : ladders.entrySet())
+    			json.put(group.getKey(), getPermissionGroup(group.getValue()));
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    public JSONObject getPermissionGroup(PermissionGroup group) {
+    	JSONObject json = new JSONObject();
+    	try {
+    		json.put("name", group.getName());
+    		json.put("rank", group.getRank());
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    public JSONArray getInventory(PlayerInventory inventory) {
     	JSONArray json = new JSONArray();
     	try {
 	    	ItemStack[] list = inventory.getContents();
@@ -136,7 +178,7 @@ public class SIJSON {
 	    				json_item.put("amount", list[j].getAmount());
 	    				json_item.put("durability", list[j].getDurability());
 	    				json_item.put("slot", j);
-	    				json_item.put("enchantments", this.Enchantments(list[j].getEnchantments()));
+	    				json_item.put("enchantments", getEnchantments(list[j].getEnchantments()));
 	    				json.add(json_item);
 					}
 	    		}
@@ -148,7 +190,7 @@ public class SIJSON {
     	return json;
     }
     
-    private JSONObject Enchantments(Map<Enchantment, Integer> enchantments) {
+    private JSONObject getEnchantments(Map<Enchantment, Integer> enchantments) {
     	JSONObject json = new JSONObject();
     	try {
 			Set<Enchantment> enchant_list = enchantments.keySet();
@@ -162,7 +204,7 @@ public class SIJSON {
 		return json ;
     }
     
-    private JSONArray PotionEffects(Collection<PotionEffect> potion_effects) {
+    private JSONArray getPotionEffects(Collection<PotionEffect> potion_effects) {
     	JSONArray json = new JSONArray();
     	try {
     		for (PotionEffect pe : potion_effects) {
@@ -179,7 +221,7 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONObject Entities(Collection<Entity> entities) {
+    public JSONObject getEntities(Collection<Entity> entities) {
     	JSONObject json = new JSONObject();
     	try {
 	    	Map<Short, Integer> counts = new HashMap<Short, Integer>();
