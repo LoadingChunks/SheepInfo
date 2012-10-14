@@ -111,10 +111,10 @@ public class SIJSON {
 			json.put("level", player.getLevel());
 			json.put("exp", player.getExp());
 			json.put("total_exp", player.getTotalExperience());
-			json.put("potion_fx", this.getPotionEffects(player.getActivePotionEffects()));
+			json.put("potion_fx", getPotionEffects(player.getActivePotionEffects()));
 			json.put("world", player.getWorld().getName());
 			
-			PermissionGroup[] groups = this.mPlugin.getPermissionManager().getUser(player).getGroups();
+			PermissionGroup[] groups = mPlugin.getPermissionManager().getUser(player).getGroups();
 			if (groups.length > 0) {
 				PermissionGroup max = groups[0];
 				for (PermissionGroup group : groups) {
@@ -131,7 +131,7 @@ public class SIJSON {
 		}
 
 		if (inventory) {
-			json.put("inventory", this.getInventory(player.getInventory()));
+			json.put("inventory", getInventory(player.getInventory()));
 		}
 		
     	return json;

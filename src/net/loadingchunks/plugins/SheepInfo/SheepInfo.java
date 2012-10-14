@@ -38,7 +38,7 @@ public class SheepInfo extends JavaPlugin {
         // IT LIES!
         getLogger().info("SheepInfo Config saved to memory.");
         
-        PluginDescriptionFile pdfFile = this.getDescription();
+        PluginDescriptionFile pdfFile = getDescription();
         getLogger().info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
         
         getLogger().info("Starting SheepInfo HTTPD on " + getConfig().getString("sheep.bind.addr") + ":" + getConfig().getInt("sheep.bind.port"));

@@ -56,7 +56,7 @@ public class SIHTTPD {
     }
     
     public void kill() {
-    	this.mServer.stop(0);
+    	mServer.stop(0);
     }
     
     static void ServeJSON(HttpExchange t, String response) throws IOException {
@@ -220,7 +220,7 @@ public class SIHTTPD {
 		private final SIHTTPD mHttpd;
 		
 		public SIWorldsHandler(SIHTTPD instance) {
-			this.mHttpd = instance;
+			mHttpd = instance;
 		}
 		
 		public void handle(HttpExchange t) throws IOException {
