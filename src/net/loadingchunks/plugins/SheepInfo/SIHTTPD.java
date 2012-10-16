@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -22,18 +21,18 @@ import com.sun.net.httpserver.HttpServer;
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
 public class SIHTTPD {
-    private final SheepInfo plugin;
-    private final SIJSON infoget;
-    private HttpServer server;
+    private final SheepInfo mPlugin;
+    private final SIJSON mInfoget;
+    private HttpServer mServer;
 
     public SIHTTPD (SheepInfo instance) {
-        this.plugin = instance;
-        this.infoget = new SIJSON(this.plugin);
+        mPlugin = instance;
+        mInfoget = new SIJSON(mPlugin);
     }
     
     public boolean listen() {
 		try {
-			this.server = HttpServer.create(new InetSocketAddress(this.plugin.getConfig().getInt("sheep.bind.port")), 0);
+			mServer = HttpServer.create(new InetSocketAddress(mPlugin.getConfig().getInt("sheep.bind.port")), 0);
 		}
 		catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -43,21 +42,21 @@ public class SIHTTPD {
 			e.printStackTrace();
 			return false;
 		}
-    	this.server.createContext("/entities", new SIEntityHandler(this));
-    	this.server.createContext("/inventories", new SIInventoriesHandler(this));
-    	this.server.createContext("/inventory", new SIInventoryHandler(this));
-    	this.server.createContext("/stats", new SIStatsHandler(this));
-    	this.server.createContext("/player", new SIPlayerHandler(this));
-    	this.server.createContext("/players", new SIPlayersHandler(this));
-    	this.server.createContext("/worlds", new SIWorldsHandler(this));
-    	this.server.createContext("/", new SIDefaultHandler());
-    	this.server.setExecutor(null);
-    	this.server.start();
+    	mServer.createContext("/entities", new SIEntityHandler(this));
+    	mServer.createContext("/inventories", new SIInventoriesHandler(this));
+    	mServer.createContext("/inventory", new SIInventoryHandler(this));
+    	mServer.createContext("/stats", new SIStatsHandler(this));
+    	mServer.createContext("/player", new SIPlayerHandler(this));
+    	mServer.createContext("/players", new SIPlayersHandler(this));
+    	mServer.createContext("/worlds", new SIWorldsHandler(this));
+    	mServer.createContext("/", new SIDefaultHandler());
+    	mServer.setExecutor(null);
+    	mServer.start();
     	return true;
     }
     
     public void kill() {
-    	this.server.stop(0);
+    	mServer.stop(0);
     }
     
     static void ServeJSON(HttpExchange t, String response) throws IOException {
@@ -75,17 +74,17 @@ public class SIHTTPD {
     }
     
     static class SIEntityHandler implements HttpHandler {
-    	private final SIHTTPD httpd;
+    	private final SIHTTPD mHttpd;
     	
     	public SIEntityHandler(SIHTTPD instance) {
-    		this.httpd = instance;
+    		mHttpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
     		
-    		for (World w : this.httpd.plugin.getWorlds()) {
-    			response_object.put(w.getName(), this.httpd.infoget.Entities(w.getEntities()));
+    		for (World w : mHttpd.mPlugin.getServer().getWorlds()) {
+    			response_object.put(w.getName(), mHttpd.mInfoget.getEntities(w.getEntities()));
     		}
 
     		SIHTTPD.ServeJSON(t, response_object.toJSONString());
@@ -93,17 +92,17 @@ public class SIHTTPD {
     }
     
     static class SIInventoriesHandler implements HttpHandler {
-    	private final SIHTTPD httpd;
+    	private final SIHTTPD mHttpd;
     	
     	public SIInventoriesHandler(SIHTTPD instance) {
-    		this.httpd = instance;
+    		mHttpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
     		
-    		for (Player p : this.httpd.plugin.getOnlinePlayers()) {
-    			response_object.put(p.getName(), this.httpd.infoget.Inventory(p.getInventory()));
+    		for (Player p : mHttpd.mPlugin.getServer().getOnlinePlayers()) {
+    			response_object.put(p.getName(), mHttpd.mInfoget.getInventory(p.getInventory()));
     		}
 
     		SIHTTPD.ServeJSON(t, response_object.toJSONString());
@@ -111,10 +110,10 @@ public class SIHTTPD {
     }
     
     static class SIInventoryHandler implements HttpHandler {
-    	private final SIHTTPD httpd;
+    	private final SIHTTPD mHttpd;
     	
     	public SIInventoryHandler(SIHTTPD instance) {
-    		this.httpd = instance;
+    		mHttpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
@@ -125,9 +124,9 @@ public class SIHTTPD {
     		Map<String, Object> params = parseQuery(t.getRequestURI().getQuery());
     		
     		if (params.containsKey(PARAM_PLAYER) && params.get(PARAM_PLAYER) != null) {
-    			Player p = this.httpd.plugin.getServer().getPlayerExact((String)params.get(PARAM_PLAYER));
+    			Player p = mHttpd.mPlugin.getServer().getPlayerExact((String)params.get(PARAM_PLAYER));
     			if (p != null) {
-    				response_object.put("inventory", this.httpd.infoget.Inventory(p.getInventory()));
+    				response_object.put("inventory", mHttpd.mInfoget.getInventory(p.getInventory()));
     			}
     			else {
         			response_object.put("error", "That player has never visited this server.");
@@ -142,24 +141,24 @@ public class SIHTTPD {
     }
     
     static class SIStatsHandler implements HttpHandler {
-    	private final SIHTTPD httpd;
+    	private final SIHTTPD mHttpd;
     	
     	public SIStatsHandler(SIHTTPD instance) {
-    		this.httpd = instance;
+    		mHttpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
-    		JSONObject response_object = this.httpd.infoget.Stats();
+    		JSONObject response_object = mHttpd.mInfoget.getStats();
 
     		SIHTTPD.ServeJSON(t, response_object.toJSONString());
     	}
     }
     
     static class SIPlayerHandler implements HttpHandler {
-    	private final SIHTTPD httpd;
+    	private final SIHTTPD mHttpd;
     	
     	public SIPlayerHandler(SIHTTPD instance) {
-    		this.httpd = instance;
+    		mHttpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
@@ -171,16 +170,16 @@ public class SIHTTPD {
     		
     		if (params.containsKey(PARAM_PLAYER) && params.get(PARAM_PLAYER) != null) {
     			String player_name = (String)params.get(PARAM_PLAYER);
-    			Player p = this.httpd.plugin.getServer().getPlayerExact(player_name);
+    			Player p = mHttpd.mPlugin.getServer().getPlayerExact(player_name);
     			boolean offline = false;
     			if (p == null) {
-    				OfflinePlayer[] offlinePlayers = this.httpd.plugin.getServer().getOfflinePlayers();
+    				OfflinePlayer[] offlinePlayers = mHttpd.mPlugin.getServer().getOfflinePlayers();
     				for (OfflinePlayer op : offlinePlayers)
         				if (op.getName().equalsIgnoreCase(player_name))
     						offline = true;
     			}
     			if (p != null) {
-    				JSONObject p_json = this.httpd.infoget.Player(p, false); 
+    				JSONObject p_json = mHttpd.mInfoget.getPlayer(p, false); 
     				if (p_json != null)
     					response_object = p_json;
     				else
@@ -202,32 +201,32 @@ public class SIHTTPD {
     }
     
     static class SIPlayersHandler implements HttpHandler {
-    	private final SIHTTPD httpd;
+    	private final SIHTTPD mHttpd;
     	
     	public SIPlayersHandler(SIHTTPD instance) {
-    		this.httpd = instance;
+    		mHttpd = instance;
     	}
     	
     	public void handle(HttpExchange t) throws IOException {
     		JSONObject response_object = new JSONObject();
     		
-    		response_object.put("players", this.httpd.infoget.Players(false));
+    		response_object.put("players", mHttpd.mInfoget.getPlayers(false));
 
     		SIHTTPD.ServeJSON(t, response_object.toJSONString());
     	}
     }
 
 	static class SIWorldsHandler implements HttpHandler {
-		private final SIHTTPD httpd;
+		private final SIHTTPD mHttpd;
 		
 		public SIWorldsHandler(SIHTTPD instance) {
-			this.httpd = instance;
+			mHttpd = instance;
 		}
 		
 		public void handle(HttpExchange t) throws IOException {
 			JSONObject response_object = new JSONObject();
 			
-			response_object.put("worlds", this.httpd.infoget.Worlds(this.httpd.plugin.getServer().getWorlds()));
+			response_object.put("worlds", mHttpd.mInfoget.getWorlds(mHttpd.mPlugin.getServer().getWorlds()));
 	
 			SIHTTPD.ServeJSON(t, response_object.toJSONString());
 		}
