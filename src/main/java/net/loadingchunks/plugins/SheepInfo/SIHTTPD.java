@@ -42,7 +42,8 @@ public class SIHTTPD {
 			e.printStackTrace();
 			return false;
 		}
-    	mServer.createContext("/entities", new SIEntityHandler(this));
+    	mServer.createContext("/entities", new SIEntitiesHandler(this));
+    	mServer.createContext("/entitycount", new SIEntityCountHandler(this));
     	mServer.createContext("/inventories", new SIInventoriesHandler(this));
     	mServer.createContext("/inventory", new SIInventoryHandler(this));
     	mServer.createContext("/stats", new SIStatsHandler(this));
@@ -73,10 +74,26 @@ public class SIHTTPD {
 		os.close();
     }
     
-    static class SIEntityHandler implements HttpHandler {
+    static class SIEntitiesHandler implements HttpHandler {
     	private final SIHTTPD mHttpd;
     	
-    	public SIEntityHandler(SIHTTPD instance) {
+    	public SIEntitiesHandler(SIHTTPD instance) {
+    		mHttpd = instance;
+    	}
+    	
+    	public void handle(HttpExchange t) throws IOException {
+    		JSONObject response_object = new JSONObject();
+    		
+    		response_object.put("entities", mHttpd.mInfoget.getEntities());
+
+    		SIHTTPD.ServeJSON(t, response_object.toJSONString());
+    	}
+    }
+    
+    static class SIEntityCountHandler implements HttpHandler {
+    	private final SIHTTPD mHttpd;
+    	
+    	public SIEntityCountHandler(SIHTTPD instance) {
     		mHttpd = instance;
     	}
     	
@@ -84,7 +101,7 @@ public class SIHTTPD {
     		JSONObject response_object = new JSONObject();
     		
     		for (World w : mHttpd.mPlugin.getServer().getWorlds()) {
-    			response_object.put(w.getName(), mHttpd.mInfoget.getEntities(w.getEntities()));
+    			response_object.put(w.getName(), mHttpd.mInfoget.getEntityCounts(w.getEntities()));
     		}
 
     		SIHTTPD.ServeJSON(t, response_object.toJSONString());
@@ -237,6 +254,8 @@ public class SIHTTPD {
     		String response = "";
     		response += "SheepInfo API:\n\n";
     		response += "/entities\n";
+			response += "    provides a list of all entities\n\n";
+    		response += "/entitycounts\n";
 			response += "    provides a count of each type of entity\n\n";
     		response += "/inventories\n";
 			response += "    returns an associative array of inventories of online players\n\n";

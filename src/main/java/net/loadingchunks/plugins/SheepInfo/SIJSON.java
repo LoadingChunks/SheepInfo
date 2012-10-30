@@ -2,6 +2,7 @@ package net.loadingchunks.plugins.SheepInfo;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -221,7 +222,30 @@ public class SIJSON {
     	return json;
     }
     
-    public JSONObject getEntities(Collection<Entity> entities) {
+    public JSONArray getEntities() {
+		JSONArray json = new JSONArray();
+    	try {
+    		for (World world : mPlugin.getServer().getWorlds()) {
+    			List<Entity> entities = world.getEntities();
+		   	
+		    	for (Entity e : entities) {
+		    		JSONObject json_entity = new JSONObject();
+		    		json_entity.put("type", e.getType().toString());
+		    		json_entity.put("x", e.getLocation().getX());
+		    		json_entity.put("y", e.getLocation().getY());
+		    		json_entity.put("z", e.getLocation().getZ());
+		    		json_entity.put("world", e.getWorld().getName());
+		    		json.add(json_entity);
+		    	}
+    		}
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    public JSONObject getEntityCounts(Collection<Entity> entities) {
     	JSONObject json = new JSONObject();
     	try {
 	    	Map<Short, Integer> counts = new HashMap<Short, Integer>();
