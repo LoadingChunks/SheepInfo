@@ -1,5 +1,4 @@
 name: SheepInfo
 main: net.loadingchunks.plugins.SheepInfo.SheepInfo
-version: 0.2
+version: 0.8
 commands:
-depend: [PermissionsEx]
