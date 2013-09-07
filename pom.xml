@@ -3,17 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.loadingchunks.plugins</groupId>
     <artifactId>SheepInfo</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.8</version>
     <name>SheepInfo</name>
     <description>JSON API for Pulling Data from Minecraft Servers</description>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>pex-repo</id>
-            <url>http://repo.tehkode.ru/repository/bukkit-plugins/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -22,13 +18,6 @@
             <artifactId>bukkit</artifactId>
             <!-- Bukkit API Version, change if out dated -->
             <version>1.4.2-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ru.tehkode</groupId>
-            <artifactId>PermissionsEx</artifactId>
-            <version>1.18</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
