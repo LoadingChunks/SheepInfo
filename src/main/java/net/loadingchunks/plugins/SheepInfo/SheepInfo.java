@@ -1,13 +1,9 @@
-
 package net.loadingchunks.plugins.SheepInfo;
 
 import java.util.HashMap;
 
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
  * SheepInfo stats reporting system plugin for Bukkit
@@ -17,11 +13,6 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class SheepInfo extends JavaPlugin {
 	private final HashMap<String, String> mSIConfig = new HashMap<String, String>();
 	private final SIHTTPD mHttpd = new SIHTTPD(this);
-	private PermissionManager mPermissionManager;
-	
-	public PermissionManager getPermissionManager() {
-		return mPermissionManager;
-	}
 
     public void onEnable() {
         // Get the config.
@@ -33,8 +24,6 @@ public class SheepInfo extends JavaPlugin {
         // Although we're not actually checking... GG
         getLogger().info("Loaded SheepInfo Config Successfully!");
         
-        mPermissionManager = PermissionsEx.getPermissionManager();
-
         // IT LIES!
         getLogger().info("SheepInfo Config saved to memory.");
         
