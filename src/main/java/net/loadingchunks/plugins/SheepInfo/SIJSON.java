@@ -17,9 +17,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.json.simple.*;
 
-import ru.tehkode.permissions.PermissionGroup;
-import ru.tehkode.permissions.PermissionUser;
-
 import net.loadingchunks.plugins.SheepInfo.SheepInfo;
 
 
@@ -116,7 +113,6 @@ public class SIJSON {
 			json.put("total_exp", player.getTotalExperience());
 			json.put("potion_fx", getPotionEffects(player.getActivePotionEffects()));
 			json.put("world", player.getWorld().getName());
-			json.put("permissions", getPermissionsData(mPlugin.getPermissionManager().getUser(player)));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -126,44 +122,6 @@ public class SIJSON {
 			json.put("inventory", getInventory(player.getInventory()));
 		}
 		
-    	return json;
-    }
-    
-    public JSONObject getPermissionsData(PermissionUser user) {
-    	JSONObject json = new JSONObject();
-    	try {
-			json.put("groups", getPermissionGroups(user));
-			json.put("prefix", user.getPrefix());
-			json.put("suffix", user.getSuffix());
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	return json;
-    }
-    
-    public JSONObject getPermissionGroups(PermissionUser user) {
-    	JSONObject json = new JSONObject();
-    	try {
-        	Map<String, PermissionGroup> ladders = user.getRankLadders();
-    		for (Map.Entry<String, PermissionGroup> group : ladders.entrySet())
-    			json.put(group.getKey(), getPermissionGroup(group.getValue()));
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	return json;
-    }
-    
-    public JSONObject getPermissionGroup(PermissionGroup group) {
-    	JSONObject json = new JSONObject();
-    	try {
-    		json.put("name", group.getName());
-    		json.put("rank", group.getRank());
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}
     	return json;
     }
     
