@@ -66,6 +66,7 @@ public class SIJSON {
     		json.put("max_mem", Runtime.getRuntime().maxMemory());
     		json.put("motd", mPlugin.getServer().getMotd());
     		json.put("version", mPlugin.getServer().getVersion());
+    		json.put("whitelist", mPlugin.getServer().hasWhitelist());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
